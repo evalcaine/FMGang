@@ -15,6 +15,9 @@ body {
   color: #111827;
 }
 
+.hidden {
+  display: none !important;
+}
 
 
 
