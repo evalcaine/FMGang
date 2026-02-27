@@ -71,12 +71,6 @@ header p {
   box-sizing: border-box;
 }
 
-/* Fix mobile date input overflow */
-input[type="date"] {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
 
 body {
   margin: 0;
@@ -292,6 +286,14 @@ button:disabled {
   font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 12px;
+}
+
+/* Fix mobile date input overflow */
+input[type="date"] {
+  padding: 12px 16px;
+  height: 52px;              /* 👈 control exact height */
+  font-weight: 500;
+  border-radius: var(--radius-lg);
 }
 
 .person {
