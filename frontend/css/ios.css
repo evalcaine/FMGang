@@ -349,3 +349,31 @@ button:disabled {
   color: var(--text-secondary);
   margin-top: 14px;
 }
+
+
+/* ===============================
+   TOUR ACTION COLORS ONLY
+================================ */
+
+/* EDIT */
+.tour-item button:first-of-type {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+.tour-item button:first-of-type:hover {
+  background: var(--primary-hover);
+}
+
+/* DELETE */
+.tour-item button:last-of-type {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.tour-item button:last-of-type:hover {
+  background: var(--danger);
+  color: white;
+}
