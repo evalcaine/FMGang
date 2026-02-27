@@ -112,7 +112,7 @@ async function loadMatches() {
 
   let response;
   try {
-    response = await fetch(url);
+    response = await fetch(`/api${url}`);
   } catch (err) {
     console.error('Network error:', err);
     empty.innerText = 'Cannot reach server';
@@ -166,7 +166,7 @@ async function loadMatches() {
 async function openProfile(city, date, name) {
 
   const url =
-    `/profile` +
+    `/api/profile` +
     `?email=${encodeURIComponent(currentUserEmail)}` +
     `&name=${encodeURIComponent(name)}` +
     `&date=${date}` +
@@ -222,16 +222,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  const userEmail = session.user.email;
+  currentUserEmail = session.user.email;
 
-  setToday();
-
-  // Now load everything AFTER we have email
-  await loadRoutes();
-  await loadUserTours(userEmail);
-
-  const today = new Date().toISOString().split('T')[0];
-  await loadMatches(userEmail, today);
+  setToday(); // this already calls loadMatches()
 
 });
 </script>
