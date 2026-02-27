@@ -16,9 +16,10 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 /* ===============================
    DATABASE
 ================================ */
-const hasDatabaseUrl = Boolean(process.env.DATABASE_URL);
 
-const connectionString = process.env.DATABASE_URL || process.env.SUPABASE_DB_URL;
+const connectionString =
+  process.env.DATABASE_URL || process.env.SUPABASE_DB_URL;
+
 const hasDatabaseUrl = Boolean(connectionString);
 
 const pool = hasDatabaseUrl
@@ -27,22 +28,6 @@ const pool = hasDatabaseUrl
       ssl: { rejectUnauthorized: false }
     })
   : null;
-
-if (!hasDatabaseUrl) {
-  console.error('DATABASE_URL/SUPABASE_DB_URL is not set. Add your Supabase Postgres connection string in .env.');
-} else {
-  pool.on('error', (err) => {
-    console.error('Unexpected database pool error:', err);
-  });
-}
-
-function ensureDatabase(res) {
-  if (!pool) {
-    res.status(500).json({ error: 'Database is not configured (missing DATABASE_URL or SUPABASE_DB_URL)' });
-    return false;
-  }
-  return true;
-}
 
 
 /* ===============================
@@ -55,7 +40,7 @@ app.get('/', (req, res) => {
 /* ===============================
    ROUTES
 ================================ */
-app.get('/routes', async (_, res) => {
+app.get('/api/routes', async (_, res) => {
   if (!ensureDatabase(res)) return;
   const r = await pool.query(
     `SELECT DISTINCT code FROM routes ORDER BY code`
@@ -66,7 +51,7 @@ app.get('/routes', async (_, res) => {
 /* ===============================
    CREATE TOUR
 ================================ */
-app.post('/trips', async (req, res) => {
+app.post('/api/trips', async (req, res) => {
 if (!ensureDatabase(res)) return;
   const { email, name, routeCode, startDate } = req.body;
   if (!email || !name || !routeCode || !startDate) {
@@ -94,7 +79,7 @@ if (!ensureDatabase(res)) return;
 /* ===============================
    USER TOURS
 ================================ */
-app.get('/user-tours', async (req, res) => {
+app.get('/api/user-tours', async (req, res) => {
     if (!ensureDatabase(res)) return;
   const { email } = req.query;
 
@@ -117,7 +102,7 @@ app.get('/user-tours', async (req, res) => {
 /* ===============================
    MATCHES (REAL)
 ================================ */
-app.get('/matches/grouped', async (req, res) => {
+app.get('/api/matches/grouped', async (req, res) => {
    if (!ensureDatabase(res)) return;
   const { email, date } = req.query;
 
@@ -157,7 +142,7 @@ app.get('/matches/grouped', async (req, res) => {
 
   } catch (err) {
     console.error('MATCH ERROR:', err);
-    
+
     const message = err.code === 'ECONNREFUSED'
       ? 'Database connection refused'
       : 'Match error';
@@ -169,7 +154,7 @@ app.get('/matches/grouped', async (req, res) => {
 /* ===============================
    PROFILE (NUEVO)
 ================================ */
-app.get('/profile', async (req, res) => {
+app.get('/api/profile', async (req, res) => {
   if (!ensureDatabase(res)) return;
 
   const { name } = req.query;
