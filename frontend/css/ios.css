@@ -300,14 +300,14 @@ button:disabled {
 
 
 .modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 1000;
+  background: var(--bg-card);
+  width: 100%;
+  max-width: 340px;   /* 👈 más estrecha */
+  padding: 32px 24px;
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+  position: relative;
+  text-align: center;
 }
 
 .hidden {
@@ -323,10 +323,11 @@ button:disabled {
   box-shadow: 0 25px 50px rgba(15, 23, 42, 0.25);
 }
 
-.modal-card h3 {
-  text-align: center;
-  margin-top: 0;
-  color: var(--primary);
+.modal h2 {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-main);
 }
 
 /* ===============================
@@ -351,14 +352,14 @@ button:disabled {
    PROFILE TEXT
 ================================ */
 .phone {
+  font-size: 16px;
   font-weight: 500;
-  margin-top: 10px;
   color: var(--primary);
+  margin-bottom: 8px;
 }
 
 .note {
-  margin-top: 14px;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-secondary);
-  text-align: center;
+  margin-top: 14px;
 }
