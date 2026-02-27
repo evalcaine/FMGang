@@ -287,7 +287,7 @@ button:disabled {
   position: fixed;
   inset: 0;
   background: rgba(15, 23, 42, 0.45);
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
