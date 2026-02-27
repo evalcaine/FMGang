@@ -1,30 +1,24 @@
-/* ===============================
+/* ======================================================
    VARIABLES — CLEAN TRAVEL MINIMAL
-================================ */
+====================================================== */
 :root {
-  /* Backgrounds */
   --bg-main: #F8FAFC;
   --bg-card: #FFFFFF;
   --border-light: #E2E8F0;
 
-  /* Primary */
   --primary: #2563EB;
   --primary-hover: #3B82F6;
 
-  /* Text */
   --text-main: #0F172A;
   --text-secondary: #64748B;
   --text-muted: #94A3B8;
 
-  /* Match Accent */
   --match: #10B981;
   --match-bg: #ECFDF5;
 
-  /* States */
   --danger: #EF4444;
   --success: #16A34A;
 
-  /* Effects */
   --shadow-soft: 0 4px 12px rgba(15, 23, 42, 0.06);
   --shadow-hover: 0 8px 20px rgba(15, 23, 42, 0.08);
 
@@ -37,13 +31,36 @@
 }
 
 
-/* ===============================
+/* ======================================================
+   RESET + BASE
+====================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+               "Segoe UI", system-ui, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+.hidden {
+  display: none !important;
+}
+
+
+/* ======================================================
    HEADER BRANDING
-================================ */
+====================================================== */
 header {
   text-align: center;
-  padding-top: 48px;   /* 👈 más aire arriba */
-  margin-bottom: 32px; /* 👈 más separación abajo */
+  padding-top: 48px;
+  margin-bottom: 32px;
 }
 
 header h1 {
@@ -62,33 +79,9 @@ header p {
 }
 
 
-/* ===============================
-   RESET + BASE
-================================ */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
-               "Segoe UI", system-ui, sans-serif;
-  background: var(--bg-main);
-  color: var(--text-main);
-  -webkit-font-smoothing: antialiased;
-}
-
-.hidden {
-  display: none !important;
-}
-
-
-/* ===============================
+/* ======================================================
    NAVBAR
-================================ */
+====================================================== */
 .navbar {
   position: sticky;
   top: 0;
@@ -131,28 +124,18 @@ body {
 }
 
 
-/* ===============================
+/* ======================================================
    LAYOUT
-================================ */
+====================================================== */
 .container {
-  max-width: 520px;
+  max-width: 420px;   /* restored original balanced width */
   margin: 80px auto;
-  padding: 0 16px;
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 0 16px;   /* less side padding */
-  }
-
-  .card {
-    padding: 20px;     /* less internal padding */
-  }
+  padding: 0 20px;
 }
 
 .card {
   background: var(--bg-card);
-  padding: 20px;
+  padding: 22px;  /* balanced width */
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-light);
   box-shadow: var(--shadow-soft);
@@ -161,13 +144,12 @@ body {
 
 .card:hover {
   box-shadow: var(--shadow-hover);
-  transform: translateY(0px);
 }
 
 
-/* ===============================
+/* ======================================================
    TYPOGRAPHY
-================================ */
+====================================================== */
 h1, h2, h3 {
   margin-top: 0;
   text-align: center;
@@ -181,9 +163,9 @@ p {
 }
 
 
-/* ===============================
+/* ======================================================
    FORM CONTROLS
-================================ */
+====================================================== */
 input,
 button {
   width: 100%;
@@ -206,10 +188,16 @@ input:focus {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
+input[type="date"] {
+  padding: 12px 16px;
+  font-weight: 500;
+  border-radius: var(--radius-lg);
+}
 
-/* ===============================
+
+/* ======================================================
    BUTTONS
-================================ */
+====================================================== */
 button {
   border: none;
   cursor: pointer;
@@ -217,26 +205,30 @@ button {
   transition: var(--transition-fast);
 }
 
-button.primary {
+.search-btn {
   background: var(--primary);
   color: white;
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
-button.primary:hover {
+.search-btn:hover {
   background: var(--primary-hover);
 }
 
-button.primary:active {
-  transform: scale(0.98);
+.today-btn {
+  background: var(--match-bg);
+  color: var(--match);
+  border: 1px solid var(--match);
 }
 
-button.secondary {
-  background: var(--border-light);
-  color: var(--text-main);
+.today-btn:hover {
+  background: var(--match);
+  color: white;
 }
 
-button.secondary:hover {
-  background: #dbe3f0;
+button:active {
+  transform: scale(0.97);
 }
 
 button:disabled {
@@ -245,65 +237,20 @@ button:disabled {
 }
 
 
-/* ===============================
-   MESSAGES
-================================ */
-.success {
-  color: var(--success);
-  text-align: center;
-  margin-top: 12px;
-}
-
-.error {
-  color: var(--danger);
-  text-align: center;
-  margin-top: 12px;
-}
-
-
-/* ===============================
-   TOURS
-================================ */
-.tour-item {
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 14px;
-  margin-top: 12px;
-  background: var(--bg-card);
-  transition: var(--transition-fast);
-}
-
-.tour-item:hover {
-  box-shadow: var(--shadow-soft);
-}
-
-.tour-item button {
-  margin-top: 10px;
-}
-
-
-/* ===============================
+/* ======================================================
    MATCH CARDS
-================================ */
-.card .city {
+====================================================== */
+.city {
   font-size: 18px;
   font-weight: 600;
   color: var(--primary);
   margin-bottom: 6px;
 }
 
-.card .date {
+.date {
   font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 12px;
-}
-
-/* Fix mobile date input overflow */
-input[type="date"] {
-  padding: 12px 16px;
- width: 100%;
-  font-weight: 500;
-  border-radius: var(--radius-lg);
 }
 
 .person {
@@ -323,20 +270,10 @@ input[type="date"] {
   color: white;
 }
 
-/* ===============================
-   FORM STACK LAYOUT
-================================ */
 
-.form-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-
-/* ===============================
-   MODAL (iOS STYLE CLEAN)
-================================ */
+/* ======================================================
+   MODAL
+====================================================== */
 .overlay {
   position: fixed;
   inset: 0;
@@ -348,33 +285,15 @@ input[type="date"] {
   z-index: 1000;
 }
 
-.hidden {
-  display: none !important;
-}
-
-
 .modal {
   background: var(--bg-card);
   width: 100%;
   max-width: 340px;
-  padding: 40px 24px 28px 24px;  /* 👈 más espacio arriba */
+  padding: 40px 24px 28px;
   border-radius: 20px;
   box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
   position: relative;
   text-align: center;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.modal-card {
-  background: var(--bg-card);
-  width: 100%;
-  max-width: 380px;
-  padding: 24px;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.25);
 }
 
 .modal h2 {
@@ -384,9 +303,10 @@ input[type="date"] {
   color: var(--text-main);
 }
 
-/* ===============================
-   CLOSE BUTTON
-================================ */
+
+/* ======================================================
+   MODAL BUTTON + TEXT
+====================================================== */
 .close-btn {
   position: absolute;
   top: 16px;
@@ -395,7 +315,6 @@ input[type="date"] {
   height: 32px;
   border-radius: 50%;
   background: var(--border-light);
-  border: none;
   font-size: 16px;
   cursor: pointer;
   color: var(--text-secondary);
@@ -410,9 +329,6 @@ input[type="date"] {
   color: white;
 }
 
-/* ===============================
-   PROFILE TEXT
-================================ */
 .phone {
   font-size: 16px;
   font-weight: 500;
@@ -424,45 +340,4 @@ input[type="date"] {
   font-size: 13px;
   color: var(--text-secondary);
   margin-top: 14px;
-}
-
-/*============================
-TODAY Button
-============================*/
-.today-btn {
-  background: var(--match-bg);
-  color: var(--match);
-  border: 1px solid var(--match);
-  font-weight: 500;
-  transition: var(--transition-fast);
-}
-
-.today-btn:hover {
-  background: var(--match);
-  color: white;
-}
-
-.today-btn:active {
-  transform: scale(0.97);
-}
-
-
-/*==============================
-Search button
-================================*/
-.search-btn {
-  background: var(--primary);
-  color: white;
-  border: none;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  transition: var(--transition-fast);
-}
-
-.search-btn:hover {
-  background: var(--primary-hover);
-}
-
-.search-btn:active {
-  transform: scale(0.97);
 }
