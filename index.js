@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🔥 FRONTEND ESTÁTICO
+//  FRONTEND ESTÁTICO
 app.use(express.static(path.join(__dirname, 'frontend')));
 
 /* ===============================
@@ -29,6 +29,14 @@ const pool = hasDatabaseUrl
     })
   : null;
 
+// DEFINE ensureDatabase HERE
+function ensureDatabase(res) {
+  if (!pool) {
+    res.status(500).json({ error: 'Database not configured' });
+    return false;
+  }
+  return true;
+}
 
 /* ===============================
    ROOT → FRONTEND
