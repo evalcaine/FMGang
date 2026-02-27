@@ -292,17 +292,7 @@ button:disabled {
   justify-content: center;
   padding: 20px;
   z-index: 1000;
-
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.2s ease;
 }
-
-.modal.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
 
 .modal-card {
   background: var(--bg-card);
