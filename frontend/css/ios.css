@@ -135,9 +135,19 @@ body {
    LAYOUT
 ================================ */
 .container {
-  max-width: 420px;
+  max-width: 520px;
   margin: 80px auto;
   padding: 0 16px;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px;   /* less side padding */
+  }
+
+  .card {
+    padding: 20px;     /* less internal padding */
+  }
 }
 
 .card {
