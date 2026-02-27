@@ -76,13 +76,17 @@ function formatDate(dateString) {
   return `${dd}/${mm}/${yyyy}`;
 }
 
-function setToday() {
+async function setToday() {
   const t = new Date();
   const yyyy = t.getFullYear();
   const mm = String(t.getMonth() + 1).padStart(2, '0');
   const dd = String(t.getDate()).padStart(2, '0');
-  document.getElementById('date').value = `${yyyy}-${mm}-${dd}`;
-  loadMatches();
+
+  const today = `${yyyy}-${mm}-${dd}`;
+
+  document.getElementById('date').value = today;
+
+  await loadMatches(); // 👈 carga matches de hoy automáticamente
 }
 
 /* ===============================
