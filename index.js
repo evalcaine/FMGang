@@ -128,23 +128,24 @@ app.get('/api/matches/grouped', async (req, res) => {
 
   try {
     const result = await pool.query(
-      `
-      SELECT
-        r.city,
-        $2::date AS date,
-        json_agg(DISTINCT jsonb_build_object(
-          'name', ut.name
-        )) AS people
-      FROM user_trips ut
-      JOIN routes r
-        ON UPPER(r.code) = UPPER(ut.route_code)
-      WHERE ut.email <> $1
-        AND $2::date BETWEEN ut.start_date
-        AND ut.start_date + r.day_offset
-      GROUP BY r.city
-      `,
-      [email, date]
-    );
+  `
+  SELECT
+    r.city,
+    $2::date AS date,
+    json_agg(
+      jsonb_build_object(
+        'name', ut.name
+      )
+    ) AS people
+  FROM user_trips ut
+  JOIN routes r
+    ON UPPER(r.code) = UPPER(ut.route_code)
+  WHERE ut.email <> $1
+    AND r.day_offset = ($2::date - ut.start_date)
+  GROUP BY r.city
+  `,
+  [email, date]
+);
 
     res.json(result.rows);
 
