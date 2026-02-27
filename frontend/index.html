@@ -200,7 +200,7 @@ async function openProfile(city, date, name) {
   document.getElementById('profilePhone').innerText =
     profile.phone ? `📞 ${profile.phone}` : '📞 Phone not shared';
 
-  document.getElementById('profileOverlay').classList.add('hidden');
+  document.getElementById('profileOverlay').classList.remove('hidden');
 }
 
 function closeProfile(event) {
