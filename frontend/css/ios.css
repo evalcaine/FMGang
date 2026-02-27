@@ -38,6 +38,31 @@
 
 
 /* ===============================
+   HEADER BRANDING
+================================ */
+header {
+  text-align: center;
+  padding-top: 48px;   /* 👈 más aire arriba */
+  margin-bottom: 32px; /* 👈 más separación abajo */
+}
+
+header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: -0.3px;
+}
+
+header p {
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 0.4px;
+}
+
+
+/* ===============================
    RESET + BASE
 ================================ */
 *,
