@@ -302,8 +302,8 @@ button:disabled {
 .modal {
   background: var(--bg-card);
   width: 100%;
-  max-width: 340px;   /* 👈 más estrecha */
-  padding: 32px 24px;
+  max-width: 340px;
+  padding: 40px 24px 28px 24px;  /* 👈 más espacio arriba */
   border-radius: 20px;
   box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
   position: relative;
@@ -335,17 +335,25 @@ button:disabled {
 ================================ */
 .close-btn {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  background: none;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--border-light);
   border: none;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
   color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
 }
 
 .close-btn:hover {
-  color: var(--primary);
+  background: var(--primary);
+  color: white;
 }
 
 /* ===============================
