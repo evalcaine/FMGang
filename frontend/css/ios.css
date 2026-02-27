@@ -291,7 +291,7 @@ button:disabled {
 /* Fix mobile date input overflow */
 input[type="date"] {
   padding: 12px 16px;
-  height: 52px;              /* 👈 control exact height */
+ 
   font-weight: 500;
   border-radius: var(--radius-lg);
 }
