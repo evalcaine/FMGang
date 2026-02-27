@@ -7,12 +7,9 @@
 <link rel="stylesheet" href="css/ios.css">
 </head>
 
-
-
-
 <body>
 
-  <nav class="navbar">
+<nav class="navbar">
   <div class="nav-container">
     <div class="logo">Find My Gang</div>
     <div class="nav-links">
@@ -24,28 +21,28 @@
 </nav>
 
 <div class="container">
-<div class="card">
+  <div class="card">
 
-<h2>Add a Tour</h2>
+    <h2>Add a Tour</h2>
 
-<input id="name" placeholder="Your name">
-<input id="routeCode" list="routes" placeholder="Tour code">
-<datalist id="routes"></datalist>
-<input id="startDate" type="date">
-<input id="phone" placeholder="WhatsApp (optional)">
+    <input id="name" placeholder="Your name">
+    <input id="routeCode" list="routes" placeholder="Tour code">
+    <datalist id="routes"></datalist>
+    <input id="startDate" type="date">
+    <input id="phone" placeholder="WhatsApp (optional)">
 
-<button id="submitBtn" class="search-btn" onclick="register()" disabled>
-Loading routes…
-</button>
+    <button id="submitBtn" class="search-btn" onclick="register()" disabled>
+      Loading routes…
+    </button>
 
-<div id="message"></div>
+    <div id="message"></div>
 
-<hr style="margin:30px 0">
+    <hr style="margin:30px 0">
 
-<h3>Your tours</h3>
-<div id="userTours"></div>
+    <h3>Your tours</h3>
+    <div id="userTours"></div>
 
-</div>
+  </div>
 </div>
 
 <!-- EDIT TOUR MODAL -->
@@ -65,6 +62,25 @@ Loading routes…
   </div>
 </div>
 
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script>
+
+const supabaseClient = supabase.createClient(
+  'https://wbdlvxisyktesdylhlsg.supabase.co',
+  'sb_publishable_siYPKtcJxDZRE-vRJ79gxA_e9vrmfUP'
+);
+
+let currentUser = null;
+let availableRoutes = [];
+let editingId = null;
+
+const today = new Date();
+today.setHours(0,0,0,0);
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString();
+}
+
 /* ===============================
    INIT
 ================================ */
@@ -79,7 +95,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   currentUser = session.user;
 
-  // ✅ Cargar perfil y rellenar campos
   const { data: profile } = await supabaseClient
     .from('profiles')
     .select('name, phone')
@@ -87,12 +102,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     .single();
 
   if (profile) {
-    if (profile.name) {
-      document.getElementById('name').value = profile.name;
-    }
-    if (profile.phone) {
-      document.getElementById('phone').value = profile.phone;
-    }
+    if (profile.name) document.getElementById('name').value = profile.name;
+    if (profile.phone) document.getElementById('phone').value = profile.phone;
   }
 
   await loadRoutes();
@@ -101,7 +112,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 
 /* ===============================
-   LOAD ROUTES (FIXED)
+   LOAD ROUTES
 ================================ */
 async function loadRoutes() {
 
@@ -115,7 +126,6 @@ async function loadRoutes() {
     availableRoutes = routes.map(r => r.code);
 
     datalist.innerHTML = '';
-
     routes.forEach(r => {
       const option = document.createElement('option');
       option.value = r.code;
@@ -125,7 +135,7 @@ async function loadRoutes() {
     btn.disabled = false;
     btn.innerText = 'Add Tour';
 
-  } catch (err) {
+  } catch {
     document.getElementById('message').innerHTML =
       '<div class="error">Failed to load routes</div>';
   }
@@ -141,10 +151,7 @@ async function loadUserTours() {
   container.innerHTML = 'Loading tours...';
 
   try {
-    const res = await fetch(
-      `/api/user-tours?email=${currentUser.email}`
-    );
-
+    const res = await fetch(`/api/user-tours?email=${currentUser.email}`);
     const tours = await res.json();
 
     if (!tours.length) {
@@ -166,23 +173,23 @@ async function loadUserTours() {
         <strong>${tour.route_code}</strong><br>
         ${formatDate(tour.start_date)} → ${formatDate(tour.end_date)}
         <br>
-        <button onclick="openEdit(${tour.id}, '${tour.route_code}', '${tour.start_date}')" 
+        <button onclick="openEdit(${tour.id}, '${tour.route_code}', '${tour.start_date}')"
           ${started ? 'disabled' : ''}>Edit</button>
-        <button onclick="deleteTour(${tour.id})" 
+        <button onclick="deleteTour(${tour.id})"
           ${started ? 'disabled' : ''}>Delete</button>
       `;
 
       container.appendChild(div);
     });
 
-  } catch (err) {
+  } catch {
     container.innerHTML = '<p>Error loading tours</p>';
   }
 }
 
 
 /* ===============================
-   REGISTER TOUR
+   REGISTER
 ================================ */
 async function register() {
 
@@ -233,9 +240,7 @@ async function register() {
     document.getElementById('startDate').value = '';
     await loadUserTours();
   } else {
-    const data = await res.json().catch(() => ({}));
-    msg.innerHTML =
-      `<div class="error">${data.error || 'Error adding tour'}</div>`;
+    msg.innerHTML = '<div class="error">Error adding tour</div>';
   }
 }
 
@@ -247,23 +252,18 @@ async function deleteTour(id) {
 
   if (!confirm('Delete this tour?')) return;
 
-  const res = await fetch(
-    `/api/user-tours/${id}?email=${currentUser.email}`,
-    { method: 'DELETE' }
-  );
+  const res = await fetch(`/api/user-tours/${id}?email=${currentUser.email}`, {
+    method: 'DELETE'
+  });
 
   if (res.ok) {
     await loadUserTours();
-  } else {
-    const data = await res.json().catch(() => ({}));
-    document.getElementById('message').innerHTML =
-      `<div class="error">${data.error || 'Delete not allowed'}</div>`;
   }
 }
 
 
 /* ===============================
-   EDIT (MODAL)
+   EDIT MODAL
 ================================ */
 function openEdit(id, routeCode, startDate) {
 
@@ -285,33 +285,25 @@ function closeEdit(event) {
 
 async function saveEdit() {
 
-  const routeCode = document
-    .getElementById('editRouteCode')
-    .value.trim()
-    .toUpperCase();
+  const routeCode =
+    document.getElementById('editRouteCode').value.trim().toUpperCase();
 
-  const startDate = document.getElementById('editStartDate').value;
+  const startDate =
+    document.getElementById('editStartDate').value;
 
-  const res = await fetch(
-    `/api/user-tours/${editingId}`,
-    {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: currentUser.email,
-        routeCode,
-        startDate
-      })
-    }
-  );
+  const res = await fetch(`/api/user-tours/${editingId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: currentUser.email,
+      routeCode,
+      startDate
+    })
+  });
 
   if (res.ok) {
     closeEdit();
     await loadUserTours();
-  } else {
-    const data = await res.json().catch(() => ({}));
-    document.getElementById('editMsg').innerHTML =
-      `<div class="error">${data.error || 'Edit failed'}</div>`;
   }
 }
 
