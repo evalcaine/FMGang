@@ -222,8 +222,17 @@ window.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  currentUserEmail = session.user.email;
+  const userEmail = session.user.email;
+
   setToday();
+
+  // Now load everything AFTER we have email
+  await loadRoutes();
+  await loadUserTours(userEmail);
+
+  const today = new Date().toISOString().split('T')[0];
+  await loadMatches(userEmail, today);
+
 });
 </script>
 
