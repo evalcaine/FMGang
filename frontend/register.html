@@ -48,39 +48,22 @@ Loading routes…
 </div>
 </div>
 
-<!-- EDIT MODAL -->
-<div id="editModal" class="modal">
-  <div class="modal-card">
-    <h3>Edit Tour</h3>
+<!-- EDIT TOUR MODAL -->
+<div id="editModal" class="overlay hidden" onclick="closeEdit(event)">
+  <div class="modal">
+    <button class="close-btn" onclick="closeEdit()">✕</button>
 
-    <input id="editRouteCode" list="routes" placeholder="Tour code">
+    <h2>Edit Tour</h2>
+
+    <input id="editRouteCode" list="routes" placeholder="Tour code" disabled>
     <input id="editStartDate" type="date">
 
-    <button class="primary" onclick="saveEdit()">Save</button>
-    <button class="secondary" onclick="closeEdit()">Cancel</button>
+    <button class="search-btn" onclick="saveEdit()">Save</button>
+    <button class="today-btn" onclick="closeEdit()">Cancel</button>
 
     <div id="editMsg"></div>
   </div>
 </div>
-
-
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script>
-const supabaseClient = supabase.createClient(
-  'https://wbdlvxisyktesdylhlsg.supabase.co',
-  'sb_publishable_siYPKtcJxDZRE-vRJ79gxA_e9vrmfUP'
-);
-
-let currentUser = null;
-let availableRoutes = [];
-let editingId = null;
-
-const today = new Date();
-today.setHours(0,0,0,0);
-
-function formatDate(dateStr) {
-  return new Date(dateStr).toLocaleDateString();
-}
 
 /* ===============================
    INIT
@@ -290,12 +273,14 @@ function openEdit(id, routeCode, startDate) {
   document.getElementById('editStartDate').value =
     startDate.split('T')[0];
 
-  document.getElementById('editModal').style.display = 'flex';
+  document.getElementById('editModal').classList.remove('hidden');
 }
 
-function closeEdit() {
-  document.getElementById('editModal').style.display = 'none';
-  document.getElementById('editMsg').innerHTML = '';
+function closeEdit(event) {
+  if (!event || event.target.id === 'editModal') {
+    document.getElementById('editModal').classList.add('hidden');
+    document.getElementById('editMsg').innerHTML = '';
+  }
 }
 
 async function saveEdit() {
