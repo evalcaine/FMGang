@@ -291,7 +291,7 @@ button:disabled {
 /* Fix mobile date input overflow */
 input[type="date"] {
   padding: 12px 16px;
- 
+ width: 100%;
   font-weight: 500;
   border-radius: var(--radius-lg);
 }
@@ -311,6 +311,16 @@ input[type="date"] {
 .person:hover {
   background: var(--match);
   color: white;
+}
+
+/* ===============================
+   FORM STACK LAYOUT
+================================ */
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 
