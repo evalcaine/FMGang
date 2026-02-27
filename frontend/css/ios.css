@@ -378,3 +378,21 @@ button:disabled {
   color: white;
 }
 
+/* ===============================
+   DISABLED TOUR ACTIONS — ELEGANT
+================================ */
+
+.tour-item button:disabled {
+  background: #F3F4F6 !important;
+  color: #9CA3AF !important;
+  border: 1px solid #E5E7EB !important;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none !important;
+  opacity: 1;
+}
+
+.tour-item button:disabled:hover {
+  background: #F3F4F6 !important;
+  color: #9CA3AF !important;
+}
