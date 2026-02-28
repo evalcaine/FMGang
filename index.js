@@ -111,50 +111,70 @@ app.get('/api/user-tours', async (req, res) => {
    MATCHES (REAL)
 ================================ */
 app.get('/api/matches/grouped', async (req, res) => {
-   if (!ensureDatabase(res)) return;
+  if (!ensureDatabase(res)) return;
+
   const { email, date } = req.query;
 
   if (!email || !date) {
-    return res.status(400).json({ error: 'Missing required query params: email and date' });
+    return res.status(400).json({
+      error: 'Missing required query params: email and date'
+    });
   }
 
   const parsedDate = new Date(date);
   if (Number.isNaN(parsedDate.getTime())) {
-    return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
+    return res.status(400).json({
+      error: 'Invalid date format. Use YYYY-MM-DD'
+    });
   }
-
-
-  
 
   try {
     const result = await pool.query(
-  `
-  SELECT
-    r.city,
-    $2::date AS date,
-    json_agg(
-      jsonb_build_object(
-        'name', ut.name
+      `
+      WITH my_city AS (
+        SELECT r.city
+        FROM user_trips ut
+        JOIN routes r
+          ON UPPER(r.code) = UPPER(ut.route_code)
+        WHERE ut.email = $1
+          AND r.day_offset = ($2::date - ut.start_date)
+      ),
+      others_on_date AS (
+        SELECT
+          ut.email,
+          ut.name,
+          r.city
+        FROM user_trips ut
+        JOIN routes r
+          ON UPPER(r.code) = UPPER(ut.route_code)
+        WHERE ut.email <> $1
+          AND r.day_offset = ($2::date - ut.start_date)
       )
-    ) AS people
-  FROM user_trips ut
-  JOIN routes r
-    ON UPPER(r.code) = UPPER(ut.route_code)
-  WHERE ut.email <> $1
-    AND r.day_offset = ($2::date - ut.start_date)
-  GROUP BY r.city
-  `,
-  [email, date]
-);
+      SELECT
+        o.city,
+        $2::date AS date,
+        json_agg(
+          jsonb_build_object(
+            'name', o.name
+          )
+        ) AS people
+      FROM others_on_date o
+      JOIN my_city m
+        ON m.city = o.city
+      GROUP BY o.city
+      `,
+      [email, date]
+    );
 
     res.json(result.rows);
 
   } catch (err) {
     console.error('MATCH ERROR:', err);
 
-    const message = err.code === 'ECONNREFUSED'
-      ? 'Database connection refused'
-      : 'Match error';
+    const message =
+      err.code === 'ECONNREFUSED'
+        ? 'Database connection refused'
+        : 'Match error';
 
     res.status(500).json({ error: message });
   }
