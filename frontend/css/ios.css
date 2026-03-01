@@ -200,10 +200,10 @@ input:focus {
    DATE INPUT — CUSTOM ICON 
 ================================ */
 
-input[type="date"] {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+/* Remove native Chrome calendar completely */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+
 
   height: 48px;
   padding: 0 14px;
