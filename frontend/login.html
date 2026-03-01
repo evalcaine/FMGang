@@ -30,7 +30,26 @@
 <div id="registerForm" class="hidden">
   <input type="email" id="regEmail" placeholder="Email" />
   <input type="text" id="regName" placeholder="Full name (what others will see)" />
-  <input type="tel" id="regPhone" placeholder="Phone (if you want to be contacted)" />
+  <div class="phone-group">
+  <select id="countryCode">
+    <option value="+34" selected>🇪🇸 +34</option>
+    <option value="+351">🇵🇹 +351</option>
+    <option value="+39">🇮🇹 +39</option>
+    <option value="+44">🇬🇧 +44</option>
+    <option value="+33">🇫🇷 +33</option>
+    <option value="+1">🇺🇸 +1</option>
+    <option value="+420">🇨🇿 +420</option>
+    <option value="+31">🇳🇱 +31</option>
+    <option value="+41">🇨🇭 +41</option>
+  </select>
+
+  <input
+    type="tel"
+    id="regPhone"
+    placeholder="Phone number"
+    inputmode="numeric"
+  />
+</div>
   <input type="password" id="regPassword" placeholder="Password" />
   <button class="search-btn" onclick="createAccount()">Create account</button>
 </div>
@@ -94,7 +113,27 @@
     const email = regEmail.value;
     const password = regPassword.value;
     const name = regName.value;
-    const phone = regPhone.value;
+    
+/*============= INTERNATIONAL========*/
+    /*===If error const phone = regPhone.value;====*/
+    
+    const countryCode = document.getElementById('countryCode').value;
+const rawPhone = regPhone.value.replace(/\D/g, '');
+
+let phone = null;
+
+if (rawPhone) {
+  phone = countryCode + rawPhone;
+}
+
+/*=============PHONE VALIDATION ===========*/
+if (phone && !/^\+\d{8,15}$/.test(phone)) {
+  msg.innerText = 'Invalid international phone number';
+  return;
+}
+/*==================*/
+
+
     const msg = document.getElementById('message');
     msg.innerText = '';
 

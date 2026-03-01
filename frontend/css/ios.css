@@ -447,3 +447,23 @@ button:disabled {
 .link.strong:hover {
   color: #1d4ed8;
 }
+
+.phone-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.phone-group select {
+  width: 110px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  padding: 12px;
+  font-size: 14px;
+  background: var(--bg-card);
+  cursor: pointer;
+}
+
+.phone-group input {
+  flex: 1;
+}
