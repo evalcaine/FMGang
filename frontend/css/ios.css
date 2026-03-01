@@ -207,13 +207,14 @@ input[type="date"] {
 
   height: 48px;
   padding: 0 14px;
-  padding-right: 40px; /* space for icon */
+  padding-right: 40px;
 
+  line-height: normal;   /* ← critical */
+  
   border-radius: var(--radius-md);
   border: 1px solid var(--border-light);
   background-color: var(--bg-card);
 
-  /* Calendar SVG using your text-secondary color */
   background-image: url("data:image/svg+xml;utf8,\
   <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='20' height='20' fill='%2364748B'>\
   <path d='M7 2v2H5a2 2 0 00-2 2v2h18V6a2 2 0 00-2-2h-2V2h-2v2H9V2H7zm14 8H3v10a2 2 0 002 2h14a2 2 0 002-2V10z'/>\
@@ -222,13 +223,6 @@ input[type="date"] {
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 18px;
-}
-
-
-/* Hide native Chrome calendar icon */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  opacity: 0;
-  cursor: pointer;
 }
 
 
@@ -511,6 +505,15 @@ button:disabled {
 ================================ */
 
 select {
+
+
+  height: 48px;              /* match inputs */
+  padding: 0 14px;           /* reset vertical padding */
+  box-sizing: border-box;
+  font-size: 15px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
