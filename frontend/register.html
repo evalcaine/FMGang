@@ -26,8 +26,9 @@
     <h2>Add a Tour</h2>
 
     <input id="name" placeholder="Your name">
-    <input id="routeCode" list="routes" placeholder="Tour code">
-    <datalist id="routes"></datalist>
+    <select id="routeCode">
+  <option value="">Select tour</option>
+</select>
     <input id="startDate" type="date">
     <input id="phone" placeholder="WhatsApp (optional)">
 
@@ -117,7 +118,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 async function loadRoutes() {
 
   const btn = document.getElementById('submitBtn');
-  const datalist = document.getElementById('routes');
+  const select = document.getElementById('routeCode');
 
   try {
     const res = await fetch('/api/routes');
@@ -125,11 +126,14 @@ async function loadRoutes() {
 
     availableRoutes = routes.map(r => r.code);
 
-    datalist.innerHTML = '';
+    // Reset select
+    select.innerHTML = '<option value="">Select tour</option>';
+
     routes.forEach(r => {
       const option = document.createElement('option');
       option.value = r.code;
-      datalist.appendChild(option);
+      option.textContent = r.code;
+      select.appendChild(option);
     });
 
     btn.disabled = false;
@@ -140,7 +144,6 @@ async function loadRoutes() {
       '<div class="error">Failed to load routes</div>';
   }
 }
-
 
 /* ===============================
    LOAD USER TOURS
