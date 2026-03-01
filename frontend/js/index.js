@@ -1,50 +1,3 @@
-// frontend/js/auth.js
-
-async function getSession() {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  return session;
-}
-
-async function getCurrentUser() {
-  const session = await getSession();
-  return session?.user || null;
-}
-
-async function requireAuth() {
-  const user = await getCurrentUser();
-  if (!user) {
-    window.location.href = '/login.html';
-    return null;
-  }
-  return user;
-}
-
-async function logout() {
-  await supabaseClient.auth.signOut();
-  window.location.href = '/login.html';
-}
-
-
-/*=======================================REGISTER.HTML=======================================*/
-
-
-
-
-
-/*=====================================INDEX.HTML==========================================*/
-
-
-/* ===============================
-   CONFIG
-================================ */
-
-const supabaseClient = supabase.createClient(
-  'https://wbdlvxisyktesdylhlsg.supabase.co',
-  'sb_publishable_siYPKtcJxDZRE-vRJ79gxA_e9vrmfUP'
-);
-
-let currentUserEmail = null;
-
 /* ===============================
    HELPERS
 ================================ */
@@ -67,11 +20,36 @@ async function setToday() {
 
   const today = `${yyyy}-${mm}-${dd}`;
 
-  document.getElementById('date').value = today;
+  const dateInput = document.getElementById('date');
+  if (dateInput) {
+    dateInput.value = today;
+  }
 
-  await loadMatches(); // 👈 carga matches de hoy automáticamente
+  await loadMatches();
 }
 
+/* ===============================
+   INIT
+================================ */
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+  const results = document.getElementById('results');
+
+  // 🛑 Guard
+  if (!results) return;
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  if (!session) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  currentUserEmail = session.user.email;
+
+  await setToday();
+});
 /* ===============================
    LOAD MATCHES
 ================================ */
@@ -219,54 +197,3 @@ window.addEventListener('DOMContentLoaded', async () => {
   setToday(); // this already calls loadMatches()
 
 });
-
-/*==========================================================LOGIN.HTML=================================*/
-
-
-  
-
-/*========================================================RESET.HTML====================================*/
-  
-  const supabaseClient = supabase.createClient(
-    'https://wbdlvxisyktesdylhlsg.supabase.co',
-    'sb_publishable_siYPKtcJxDZRE-vRJ79gxA_e9vrmfUP'
-  );
-
-  let ready = false;
-
-  // 🔑 Esperar a que Supabase procese el token del email
-  supabaseClient.auth.onAuthStateChange((event, session) => {
-    if (event === 'PASSWORD_RECOVERY' && session) {
-      ready = true;
-      console.log('Recovery session ready');
-    }
-  });
-
-  async function updatePassword() {
-    const password = document.getElementById('newPassword').value;
-    const msg = document.getElementById('msg');
-
-    if (!password) {
-      msg.innerText = 'Password required';
-      return;
-    }
-
-    if (!ready) {
-      msg.innerText = 'Please wait a second and try again';
-      return;
-    }
-
-    const { error } = await supabaseClient.auth.updateUser({
-      password
-    });
-
-    if (error) {
-      msg.innerText = error.message;
-    } else {
-      msg.innerText = 'Password updated. Redirecting...';
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 1500);
-    }
-  }
-
