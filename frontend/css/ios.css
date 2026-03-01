@@ -53,11 +53,82 @@ body {
 }
 
 /* ======================================================
+   HEADER BRANDING
+====================================================== */
+header {
+  text-align: center;
+  padding-top: 48px;
+  margin-bottom: 32px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: -0.3px;
+}
+
+header p {
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 0.4px;
+}
+
+
+/* ======================================================
+   NAVBAR
+====================================================== */
+.navbar {
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-light);
+  padding: 16px 20px;
+  z-index: 100;
+}
+
+.nav-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 17px;
+  letter-spacing: -0.2px;
+}
+
+.nav-links a,
+.nav-links button {
+  margin-left: 14px;
+  background: none;
+  border: none;
+  text-decoration: none;
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.nav-links a:hover,
+.nav-links button:hover {
+  color: var(--primary);
+}
+
+
+
+/* ======================================================
    LAYOUT
 ====================================================== */
 .container {
   width: 100%;
-  max-width: 640px;
+  max-width: 640px;   /* wider on larger screens */
   margin: 60px auto;
   padding: 0 20px;
 }
@@ -68,6 +139,36 @@ body {
     padding: 0 16px;
   }
 }
+
+.card {
+  background: var(--bg-card);
+  padding: 22px;  /* balanced width */
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-smooth);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+
+/* ======================================================
+   TYPOGRAPHY
+====================================================== */
+h1, h2, h3 {
+  margin-top: 0;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
 
 /* ======================================================
    FORM CONTROLS
@@ -169,17 +270,30 @@ input[type="date"]::-ms-clear {
 button {
   border: none;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 500;
   transition: var(--transition-fast);
 }
 
 .search-btn {
   background: var(--primary);
   color: white;
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
 .search-btn:hover {
   background: var(--primary-hover);
+}
+
+.today-btn {
+  background: var(--match-bg);
+  color: var(--match);
+  border: 1px solid var(--match);
+}
+
+.today-btn:hover {
+  background: var(--match);
+  color: white;
 }
 
 button:active {
@@ -190,6 +304,162 @@ button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+
+/* ======================================================
+   MATCH CARDS
+====================================================== */
+.city {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.date {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.person {
+  display: inline-block;
+  background: var(--match-bg);
+  color: var(--match);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  margin: 4px 6px 0 0;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.person:hover {
+  background: var(--match);
+  color: white;
+}
+
+
+/* ======================================================
+   MODAL
+====================================================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--bg-card);
+  width: 100%;
+  max-width: 340px;
+  padding: 40px 24px 28px;
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+  position: relative;
+  text-align: center;
+}
+
+.modal h2 {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+
+/* ======================================================
+   MODAL BUTTON + TEXT
+====================================================== */
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--border-light);
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.close-btn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.phone {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.note {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 14px;
+}
+
+
+/* ===============================
+   TOUR ACTION COLORS ONLY
+================================ */
+
+/* EDIT */
+.tour-item button:first-of-type {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+.tour-item button:first-of-type:hover {
+  background: var(--primary-hover);
+}
+
+/* DELETE */
+.tour-item button:last-of-type {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.tour-item button:last-of-type:hover {
+  background: var(--danger);
+  color: white;
+}
+
+/* ===============================
+   DISABLED TOUR ACTIONS — ELEGANT
+================================ */
+
+.tour-item button:disabled {
+  background: #F3F4F6 !important;
+  color: #9CA3AF !important;
+  border: 1px solid #E5E7EB !important;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none !important;
+  opacity: 1;
+}
+
+.tour-item button:disabled:hover {
+  background: #F3F4F6 !important;
+  color: #9CA3AF !important;
+}
+
+
+
 
 /* ======================================================
    AUTH LINKS
