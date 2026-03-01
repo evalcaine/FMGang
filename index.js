@@ -107,6 +107,44 @@ app.get('/api/user-tours', async (req, res) => {
   res.json(r.rows);
 });
 
+/*===================================
+EDIT SAVE
+==============================*/
+app.put('/api/user-tours/:id', async (req, res) => {
+  if (!ensureDatabase(res)) return;
+
+  const { id } = req.params;
+  const { email, routeCode, startDate } = req.body;
+
+  if (!email || !routeCode || !startDate) {
+    return res.status(400).json({ error: 'Missing fields' });
+  }
+
+  try {
+    const result = await pool.query(
+      `
+      UPDATE user_trips
+      SET route_code = UPPER($1),
+          start_date = $2
+      WHERE id = $3
+        AND email = $4
+      `,
+      [routeCode, startDate, id, email]
+    );
+
+    if (!result.rowCount) {
+      return res.status(403).json({ error: 'Not allowed' });
+    }
+
+    res.json({ ok: true });
+
+  } catch (err) {
+    console.error('UPDATE ERROR:', err);
+    res.status(500).json({ error: 'Update failed' });
+  }
+});
+
+
 /* ===============================
    MATCHES (REAL)
 ================================ */
