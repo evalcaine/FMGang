@@ -448,22 +448,46 @@ button:disabled {
   color: #1d4ed8;
 }
 
+/* ===============================
+            PHONE INPUT 
+================================ */
+
 .phone-group {
   display: flex;
   gap: 8px;
   margin-top: 14px;
 }
 
-.phone-group select {
-  width: 110px;
+.phone-group select,
+.phone-group input {
+  height: 48px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-light);
-  padding: 12px;
-  font-size: 14px;
   background: var(--bg-card);
-  cursor: pointer;
+  font-size: 15px;
+  padding: 0 14px;
 }
 
+/* COUNTRY SELECT */
+.phone-group select {
+  width: 105px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Custom dropdown arrow */
+.phone-group select {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%2364748B' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5.5 7l4.5 4 4.5-4'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  padding-right: 30px;
+}
+
+/* PHONE INPUT */
 .phone-group input {
   flex: 1;
 }
