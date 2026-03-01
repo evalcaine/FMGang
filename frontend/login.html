@@ -19,10 +19,10 @@
 <div id="loginForm">
   <input type="email" id="loginEmail" placeholder="Email" />
   <input type="password" id="loginPassword" placeholder="Password" />
-  <button class="search-btn" onclick="signIn()">Sign in</button>
+  <button class="search-btn" id="signInBTN">Sign in</button>
 
   <div class="auth-actions">
-    <span class="link subtle" onclick="forgotPassword()">
+    <span class="link subtle" id="forgotBtn">
       Forgot your password?
     </span>
   </div>
@@ -53,13 +53,13 @@
   />
 </div>
   <input type="password" id="regPassword" placeholder="Password" />
-  <button class="search-btn" onclick="createAccount()">Create account</button>
+  <button class="search-btn" id="createBtn">Create account</button>
 </div>
 
 <div id="message" class="error"></div>
 
 <div class="auth-switch">
-  <span class="link strong" onclick="toggleMode()">
+  <span class="link strong" id="toggleMode">
     <span id="toggleText">Create account</span>
   </span>
 </div>
