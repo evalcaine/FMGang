@@ -24,8 +24,6 @@ async function setToday() {
   if (dateInput) {
     dateInput.value = today;
   }
-
-  await loadMatches();
 }
 
 /* ===============================
@@ -48,7 +46,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   currentUserEmail = session.user.email;
 
-  await setToday();
+    await setToday();
+  await loadMatches();   // ✅ controlled call
 });
 /* ===============================
    LOAD MATCHES
