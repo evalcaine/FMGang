@@ -455,7 +455,7 @@ button:disabled {
 .phone-group {
   display: flex;
   gap: 8px;
-  margin-top: 14px;
+ 
 }
 
 /* IDENTICAL BOX MODEL */
@@ -468,6 +468,7 @@ button:disabled {
   border: 1px solid var(--border-light);
   background: var(--bg-card);
   box-sizing: border-box;
+  margin-top: 14px;
 }
 
 /* INPUT */
@@ -488,4 +489,5 @@ button:disabled {
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 16px;
+
 }
