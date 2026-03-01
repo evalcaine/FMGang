@@ -30,7 +30,6 @@
   --transition-smooth: 0.25s ease;
 }
 
-
 /* ======================================================
    RESET + BASE
 ====================================================== */
@@ -53,83 +52,12 @@ body {
   display: none !important;
 }
 
-
-/* ======================================================
-   HEADER BRANDING
-====================================================== */
-header {
-  text-align: center;
-  padding-top: 48px;
-  margin-bottom: 32px;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 26px;
-  font-weight: 600;
-  color: var(--primary);
-  letter-spacing: -0.3px;
-}
-
-header p {
-  margin: 8px 0 0 0;
-  font-size: 13px;
-  color: var(--text-secondary);
-  letter-spacing: 0.4px;
-}
-
-
-/* ======================================================
-   NAVBAR
-====================================================== */
-.navbar {
-  position: sticky;
-  top: 0;
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-light);
-  padding: 16px 20px;
-  z-index: 100;
-}
-
-.nav-container {
-  max-width: 900px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  font-weight: 600;
-  color: var(--primary);
-  font-size: 17px;
-  letter-spacing: -0.2px;
-}
-
-.nav-links a,
-.nav-links button {
-  margin-left: 14px;
-  background: none;
-  border: none;
-  text-decoration: none;
-  font-size: 14px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-
-.nav-links a:hover,
-.nav-links button:hover {
-  color: var(--primary);
-}
-
-
 /* ======================================================
    LAYOUT
 ====================================================== */
 .container {
   width: 100%;
-  max-width: 640px;   /* wider on larger screens */
+  max-width: 640px;
   margin: 60px auto;
   padding: 0 20px;
 }
@@ -141,91 +69,99 @@ header p {
   }
 }
 
-.card {
-  background: var(--bg-card);
-  padding: 22px;  /* balanced width */
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-light);
-  box-shadow: var(--shadow-soft);
-  transition: var(--transition-smooth);
-}
-
-.card:hover {
-  box-shadow: var(--shadow-hover);
-}
-
-
-/* ======================================================
-   TYPOGRAPHY
-====================================================== */
-h1, h2, h3 {
-  margin-top: 0;
-  text-align: center;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-}
-
-p {
-  margin: 0;
-  color: var(--text-secondary);
-}
-
-
 /* ======================================================
    FORM CONTROLS
 ====================================================== */
 input,
-button {
+button,
+select {
   width: 100%;
-  display: block;
-  padding: 14px;
+  height: 48px;
+  padding: 0 14px;
   margin-top: 14px;
   border-radius: var(--radius-md);
   font-size: 15px;
+  box-sizing: border-box;
 }
 
-input {
+input,
+select {
   border: 1px solid var(--border-light);
   background: var(--bg-card);
   outline: none;
   transition: var(--transition-fast);
 }
 
-input:focus {
+input:focus,
+select:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-/* ===============================
-   DATE INPUT — CUSTOM ICON 
-================================ */
+/* ======================================================
+   SELECT — CUSTOM ARROW (ALL DEVICES)
+====================================================== */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 
-/* Remove native Chrome calendar completely */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  display: none;
-
-
-  height: 48px;
-  padding: 0 14px;
-  padding-right: 40px;
-
-  line-height: normal;   /* ← critical */
-  
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
-  background-color: var(--bg-card);
+  padding-right: 36px;
+  cursor: pointer;
 
   background-image: url("data:image/svg+xml;utf8,\
-  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='20' height='20' fill='%2364748B'>\
+  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' width='16' height='16' fill='%2364748B'>\
+  <path d='M5.5 7l4.5 4 4.5-4'/>\
+  </svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
+/* Phone selector narrower */
+.phone-group {
+  display: flex;
+  gap: 8px;
+}
+
+.phone-group select {
+  width: 110px;
+  margin-top: 14px;
+}
+
+.phone-group input {
+  flex: 1;
+  margin-top: 14px;
+}
+
+/* ======================================================
+   DATE INPUT — CUSTOM ICON
+====================================================== */
+input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  padding-right: 40px;
+
+  background-image: url("data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='18' height='18' fill='%2364748B'>\
   <path d='M7 2v2H5a2 2 0 00-2 2v2h18V6a2 2 0 00-2-2h-2V2h-2v2H9V2H7zm14 8H3v10a2 2 0 002 2h14a2 2 0 002-2V10z'/>\
   </svg>");
-
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 18px;
 }
 
+/* Remove native calendar completely */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
 
+input[type="date"]::-ms-expand,
+input[type="date"]::-ms-clear {
+  display: none;
+}
 
 /* ======================================================
    BUTTONS
@@ -233,30 +169,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 button {
   border: none;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
   transition: var(--transition-fast);
 }
 
 .search-btn {
   background: var(--primary);
   color: white;
-  font-weight: 600;
-  letter-spacing: 0.3px;
 }
 
 .search-btn:hover {
   background: var(--primary-hover);
-}
-
-.today-btn {
-  background: var(--match-bg);
-  color: var(--match);
-  border: 1px solid var(--match);
-}
-
-.today-btn:hover {
-  background: var(--match);
-  color: white;
 }
 
 button:active {
@@ -268,163 +191,9 @@ button:disabled {
   cursor: not-allowed;
 }
 
-
 /* ======================================================
-   MATCH CARDS
-====================================================== */
-.city {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--primary);
-  margin-bottom: 6px;
-}
-
-.date {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 12px;
-}
-
-.person {
-  display: inline-block;
-  background: var(--match-bg);
-  color: var(--match);
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  margin: 4px 6px 0 0;
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-
-.person:hover {
-  background: var(--match);
-  color: white;
-}
-
-
-/* ======================================================
-   MODAL
-====================================================== */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 1000;
-}
-
-.modal {
-  background: var(--bg-card);
-  width: 100%;
-  max-width: 340px;
-  padding: 40px 24px 28px;
-  border-radius: 20px;
-  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
-  position: relative;
-  text-align: center;
-}
-
-.modal h2 {
-  margin: 0 0 12px 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-
-/* ======================================================
-   MODAL BUTTON + TEXT
-====================================================== */
-.close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--border-light);
-  font-size: 16px;
-  cursor: pointer;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition-fast);
-}
-
-.close-btn:hover {
-  background: var(--primary);
-  color: white;
-}
-
-.phone {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--primary);
-  margin-bottom: 8px;
-}
-
-.note {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 14px;
-}
-
-
-/* ===============================
-   TOUR ACTION COLORS ONLY
-================================ */
-
-/* EDIT */
-.tour-item button:first-of-type {
-  background: var(--primary);
-  color: white;
-  border: none;
-}
-
-.tour-item button:first-of-type:hover {
-  background: var(--primary-hover);
-}
-
-/* DELETE */
-.tour-item button:last-of-type {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--danger);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.tour-item button:last-of-type:hover {
-  background: var(--danger);
-  color: white;
-}
-
-/* ===============================
-   DISABLED TOUR ACTIONS — ELEGANT
-================================ */
-
-.tour-item button:disabled {
-  background: #F3F4F6 !important;
-  color: #9CA3AF !important;
-  border: 1px solid #E5E7EB !important;
-  cursor: not-allowed;
-  pointer-events: none;
-  box-shadow: none !important;
-  opacity: 1;
-}
-
-.tour-item button:disabled:hover {
-  background: #F3F4F6 !important;
-  color: #9CA3AF !important;
-}
-
-/* ===============================
    AUTH LINKS
-================================ */
-
+====================================================== */
 .auth-actions,
 .auth-switch {
   margin-top: 1rem;
@@ -438,19 +207,17 @@ button:disabled {
   position: relative;
 }
 
-/* Subtle (Forgot password) */
 .link.subtle {
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .link.subtle:hover {
-  color: #111827;
+  color: var(--text-main);
 }
 
-/* Strong (Create account / Switch) */
 .link.strong {
   font-weight: 600;
-  color: #2563eb;
+  color: var(--primary);
 }
 
 .link.strong::after {
@@ -460,74 +227,10 @@ button:disabled {
   bottom: -2px;
   width: 0%;
   height: 2px;
-  background: #2563eb;
+  background: var(--primary);
   transition: width 0.2s ease;
 }
 
 .link.strong:hover::after {
   width: 100%;
-}
-
-.link.strong:hover {
-  color: #1d4ed8;
-}
-
-/* ===============================
-            PHONE INPUT 
-================================ */
-
-.phone-group {
-  display: flex;
-  gap: 8px;
- 
-}
-
-/* IDENTICAL BOX MODEL */
-.phone-group select,
-.phone-group input {
-  height: 48px;
-  padding: 0 14px;
-  font-size: 15px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
-  background: var(--bg-card);
-  box-sizing: border-box;
-  margin-top: 14px;
-}
-
-/* INPUT */
-.phone-group input {
-  flex: 1;
-}
-
-/* ===============================
-   TOUR CODE SELECT — CUSTOM ARROW
-================================ */
-
-select {
-
-
-  height: 48px;              /* match inputs */
-  padding: 0 14px;           /* reset vertical padding */
-  box-sizing: border-box;
-  font-size: 15px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
-
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  background-color: var(--bg-card);
-
-  background-image: url("data:image/svg+xml;utf8,\
-  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' width='16' height='16' fill='%2364748B'>\
-  <path d='M5.5 7l4.5 4 4.5-4'/>\
-  </svg>");
-
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 16px;
-
-  padding-right: 36px; /* space for arrow */
 }
