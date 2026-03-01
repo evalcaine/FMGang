@@ -13,29 +13,36 @@
 <div class="container">
   <h2 id="title" class="title">Sign in</h2>
 
-  <!-- LOGIN -->
-  <div id="loginForm">
-    <input type="email" id="loginEmail" placeholder="Email" />
-    <input type="password" id="loginPassword" placeholder="Password" />
-    <button onclick="signIn()">Sign in</button>
-    <div class="toggle" onclick="forgotPassword()">Forgot your password?</div>
-  </div>
+ <!-- LOGIN -->
+<div id="loginForm">
+  <input type="email" id="loginEmail" placeholder="Email" />
+  <input type="password" id="loginPassword" placeholder="Password" />
+  <button class="search-btn" onclick="signIn()">Sign in</button>
 
-  <!-- REGISTER -->
-  <div id="registerForm" class="hidden">
-    <input type="email" id="regEmail" placeholder="Email" />
-    <input type="text" id="regName" placeholder="Full name (visible)" />
-    <input type="tel" id="regPhone" placeholder="Phone (optional)" />
-    <input type="password" id="regPassword" placeholder="Password" />
-    <button onclick="createAccount()">Create account</button>
-  </div>
-
-  <div id="message" class="error"></div>
-
-  <div class="toggle" onclick="toggleMode()">
-    <span id="toggleText">Create account</span>
+  <div class="auth-actions">
+    <span class="link subtle" onclick="forgotPassword()">
+      Forgot your password?
+    </span>
   </div>
 </div>
+
+<!-- REGISTER -->
+<div id="registerForm" class="hidden">
+  <input type="email" id="regEmail" placeholder="Email" />
+  <input type="text" id="regName" placeholder="Full name (what others will see)" />
+  <input type="tel" id="regPhone" placeholder="Phone (if you want to be contacted)" />
+  <input type="password" id="regPassword" placeholder="Password" />
+  <button class="search-btn" onclick="createAccount()">Create account</button>
+</div>
+
+<div id="message" class="error"></div>
+
+<div class="auth-switch">
+  <span class="link strong" onclick="toggleMode()">
+    <span id="toggleText">Create account</span>
+  </span>
+</div>
+
 
 <!-- Supabase -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
