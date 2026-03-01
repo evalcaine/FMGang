@@ -57,7 +57,7 @@ body {
 /* ======================================================
    HEADER BRANDING
 ====================================================== */
-header {
+header {1º2345690'
   text-align: center;
   padding-top: 48px;
   margin-bottom: 32px;
@@ -395,4 +395,55 @@ button:disabled {
 .tour-item button:disabled:hover {
   background: #F3F4F6 !important;
   color: #9CA3AF !important;
+}
+
+/* ===============================
+   AUTH LINKS
+================================ */
+
+.auth-actions,
+.auth-switch {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.link {
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+/* Subtle (Forgot password) */
+.link.subtle {
+  color: #6b7280;
+}
+
+.link.subtle:hover {
+  color: #111827;
+}
+
+/* Strong (Create account / Switch) */
+.link.strong {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.link.strong::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 2px;
+  background: #2563eb;
+  transition: width 0.2s ease;
+}
+
+.link.strong:hover::after {
+  width: 100%;
+}
+
+.link.strong:hover {
+  color: #1d4ed8;
 }
