@@ -507,25 +507,24 @@ button:disabled {
 
 
 /* ===============================
-   CONFIRM MODAL
+   CONFIRM MODAL 
 ================================ */
 
 .modal {
   position: fixed;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center; /* perfect centering */
   z-index: 9999;
-  background: transparent; /* no gray overlay */
+  background: transparent !important; /* force remove overlay */
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .modal-card {
-  background: white;
+  background: #ffffff;
   padding: 24px;
   border-radius: 16px;
   width: 90%;
@@ -536,9 +535,9 @@ button:disabled {
     0 10px 20px rgba(0,0,0,0.1);
 }
 
+/* Buttons */
 .modal-actions {
   display: flex;
-  justify-content: space-between;
   gap: 12px;
   margin-top: 20px;
 }
