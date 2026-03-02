@@ -144,6 +144,38 @@ app.put('/api/user-tours/:id', async (req, res) => {
   }
 });
 
+/* ===============================
+   DELETE USER TOUR
+================================ */
+app.delete('/api/user-tours/:id', async (req, res) => {
+  if (!ensureDatabase(res)) return;
+
+  const { id } = req.params;
+  const { email } = req.query;
+
+  if (!id || !email) {
+    return res.status(400).json({ error: 'Missing id or email' });
+  }
+
+  try {
+    const result = await pool.query(
+      `DELETE FROM user_trips 
+       WHERE id = $1 
+       AND email = $2`,
+      [id, email]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Tour not found' });
+    }
+
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error('DELETE ERROR:', err);
+    res.status(500).json({ error: 'Delete failed' });
+  }
+});
 
 /* ===============================
    MATCHES (REAL)
