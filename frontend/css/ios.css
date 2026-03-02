@@ -519,9 +519,7 @@ button:disabled {
   background: transparent !important; /* force remove overlay */
 }
 
-.hidden {
-  display: none !important;
-}
+
 
 .confirm-modal-card {
   background: #ffffff;
