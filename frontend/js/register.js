@@ -11,6 +11,43 @@ function formatDate(dateStr) {
 }
 
 /* ===============================
+   HELPER
+================================ */
+function showConfirm(title, message) {
+  return new Promise((resolve) => {
+
+    const modal = document.getElementById('confirmModal');
+    const titleEl = document.getElementById('confirmTitle');
+    const messageEl = document.getElementById('confirmMessage');
+    const okBtn = document.getElementById('confirmOk');
+    const cancelBtn = document.getElementById('confirmCancel');
+
+    titleEl.innerText = title;
+    messageEl.innerText = message;
+
+    modal.classList.remove('hidden');
+
+    function cleanup(result) {
+      modal.classList.add('hidden');
+      okBtn.removeEventListener('click', okHandler);
+      cancelBtn.removeEventListener('click', cancelHandler);
+      resolve(result);
+    }
+
+    function okHandler() {
+      cleanup(true);
+    }
+
+    function cancelHandler() {
+      cleanup(false);
+    }
+
+    okBtn.addEventListener('click', okHandler);
+    cancelBtn.addEventListener('click', cancelHandler);
+  });
+}
+
+/* ===============================
    INIT
 ================================ */
 window.addEventListener('DOMContentLoaded', async () => {
@@ -184,7 +221,12 @@ async function register() {
 ================================ */
 async function deleteTour(id) {
 
-  if (!confirm('Delete this tour?')) return;
+  const confirmed = await showConfirm(
+    "Delete tour?",
+    "This action cannot be undone."
+  );
+
+  if (!confirmed) return;
 
   const res = await fetch(`/api/user-tours/${id}?email=${currentUser.email}`, {
     method: 'DELETE'
