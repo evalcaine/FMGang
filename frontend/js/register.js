@@ -27,10 +27,18 @@ function showConfirm(title, message) {
 
     modal.classList.remove('hidden');
 
+    // 🔒 Block background scroll
+    document.body.style.overflow = 'hidden';
+
     function cleanup(result) {
       modal.classList.add('hidden');
+
+      // 🔓 Restore scroll
+      document.body.style.overflow = '';
+
       okBtn.removeEventListener('click', okHandler);
       cancelBtn.removeEventListener('click', cancelHandler);
+
       resolve(result);
     }
 
