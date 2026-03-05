@@ -427,19 +427,12 @@ margin-top:12px;
 .tour-item{
 
 display:flex;
-
 align-items:center;
-
 justify-content:space-between;
-
 gap:10px;
-
 background:var(--surface);
-
 border:1px solid var(--border);
-
 border-radius:var(--radius);
-
 padding:10px 12px;
 
 }
@@ -473,6 +466,23 @@ font-size:.85rem;
 
 }
 
+/*circular dot*/
+
+.tour-color-dot{
+width:10px;
+height:10px;
+border-radius:50%;
+flex-shrink:0;
+background:#c9c3b8;
+margin-right:8px;
+
+}
+
+.tour-dot-1{ background:#8e9aaf; }
+.tour-dot-2{ background:#c9a27e; }
+.tour-dot-3{ background:#7c9a92; }
+.tour-dot-4{ background:#b88c8c; }
+.tour-dot-5{ background:#8f8faa; }
 
 /* ======================================================
    CONFIRM MODAL
