@@ -56,7 +56,7 @@ async function calculateEndDate(routeCode, startDate) {
 
   const endDateResult = await pool.query(
     `
-    SELECT ($1::date + ($2 + 1) * INTERVAL '1 day')::date AS end_date
+    SELECT ($1::date + $2  * INTERVAL '1 day')::date AS end_date
     `,
     [startDate, maxDay]
   );
