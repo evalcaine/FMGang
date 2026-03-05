@@ -74,12 +74,19 @@ async function loadMatches() {
 
   const date = dateInput.value.split('T')[0];
 
+  // update header date label
+  const resultsDate = document.getElementById('resultsDate');
+  if (resultsDate) {
+    resultsDate.innerText = formatDate(date);
+  }
+
   const url =
     `/matches/grouped` +
     `?email=${encodeURIComponent(currentUserEmail)}` +
     `&date=${encodeURIComponent(date)}`;
 
   let response;
+
   try {
     response = await fetch(`/api${url}`);
   } catch (err) {
@@ -105,27 +112,36 @@ async function loadMatches() {
     if (!item.people || item.people.length === 0) return;
 
     const card = document.createElement('div');
-    card.className = 'card';
+    card.className = 'colleague-card';
 
     card.innerHTML = `
-      <div class="city">${item.city}</div>
-      <div class="date">${formatDate(item.date)}</div>
-      <div class="people">
+      <div class="card-city">
+        ${item.city}
+      </div>
+
+      <div class="card-date">
+        ${formatDate(item.date)}
+      </div>
+
+      <div class="card-people">
         ${item.people.map(p => `
-          <span class="person"
+          <button
+            class="person"
             onclick="openProfile(
               '${item.city}',
               '${item.date}',
-              '${p.name.replace(/'/g, "\\'")}'
+              '${p.name.replace(/'/g,"\\'")}'
             )">
             ${p.name}
-          </span>
+          </button>
         `).join('')}
       </div>
     `;
 
     results.appendChild(card);
+
   });
+
 }
 
 /* ===============================

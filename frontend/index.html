@@ -1,52 +1,120 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Find My Gang</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="css/ios.css">
+<meta charset="UTF-8" />
+<title>Find My Gang</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<link rel="stylesheet" href="css/ios.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Lora:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-  <div class="nav-container">
-    <div class="logo">Find My Gang</div>
-    <div class="nav-links">
-      <a href="index.html">Who's around?</a>
-      <a href="register.html">My tours</a>
-      <button onclick="logout()">Logout</button>
-    </div>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <span class="logo-dot"></span>
+    find my gang
+  </div>
+
+  <div class="nav-links">
+    <a href="index.html" class="active">Who's around?</a>
+    <a href="register.html">My tours</a>
+  </div>
+
+  <div class="nav-right">
+    <button onclick="logout()" class="logout-btn">Logout</button>
   </div>
 </nav>
 
-<header>
-  <h1>Find My Gang</h1>
-  <p>We're in it together</p>
-</header>
 
-<div class="form-stack">
-<div class="container">
-  <div class="search-box">
-    <input type="date" id="date" />
-    <button onclick="loadMatches()" class="search-btn">Search</button>
-    <button onclick="setToday()" class="today-btn">TODAY</button>
+<!-- MAIN -->
+<main>
+
+<!-- HERO -->
+<section class="hero">
+
+  <div class="hero-eyebrow">
+    Today is <span id="today-display"></span>
   </div>
 
-  <div class="results" id="results"></div>
-  <div class="empty" id="empty"></div>
+  <h1>
+    Who else is in
+    <span class="city-highlight" id="city-name">
+      your city
+    </span>?
+  </h1>
+
+  <p class="hero-sub">
+    Your colleagues on tour in the same city
+  </p>
+
+</section>
+
+
+<!-- DATE BAR -->
+<div class="date-bar">
+
+  <span class="date-label">Showing</span>
+
+  <input
+    type="date"
+    id="date"
+    class="date-input"
+  />
+
+  <div class="date-divider"></div>
+
+  <button
+    onclick="setToday(); loadMatches();"
+    class="today-btn">
+    Today
+  </button>
+
 </div>
+
+
+<!-- RESULTS HEADER -->
+<div class="results-header">
+
+  <span class="results-title" id="resultsTitle">
+    Colleagues nearby
+  </span>
+
+  <span class="results-count" id="resultsDate">
+  </span>
+
+</div>
+
+
+<!-- RESULTS GRID -->
+<div id="results" class="cards-grid"></div>
+
+<div id="empty" class="empty-state"></div>
+
+
+</main>
+
 
 <!-- PROFILE MODAL -->
 <div id="profileOverlay" class="overlay hidden" onclick="closeProfile(event)">
   <div class="modal">
     <button class="close-btn" onclick="closeProfile()">✕</button>
+
     <h2 id="profileName"></h2>
+
     <p id="profilePhone" class="phone"></p>
-    <p class="note">You matched on this date and city 🎉</p>
+
+    <p class="note">
+      You matched on this date and city 🎉
+    </p>
+
   </div>
 </div>
+
 
 <!-- SUPABASE -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>

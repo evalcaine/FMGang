@@ -149,14 +149,36 @@ async function loadUserTours() {
       div.className = 'tour-item';
 
       div.innerHTML = `
-        <strong>${tour.route_code}</strong><br>
-        ${formatDate(tour.start_date)} → ${formatDate(tour.end_date)}
-        <br>
-        <button onclick="openEdit(${tour.id}, '${tour.route_code}', '${tour.start_date}')"
-          ${started ? 'disabled' : ''}>Edit</button>
-        <button onclick="deleteTour(${tour.id})"
-          ${started ? 'disabled' : ''}>Delete</button>
-      `;
+
+<div class="tour-color-dot"></div>
+
+<div class="tour-info">
+
+<strong>${tour.route_code}</strong>
+
+<span>
+${formatDate(tour.start_date)} → ${formatDate(tour.end_date)}
+</span>
+
+</div>
+
+<div class="tour-actions">
+
+<button
+onclick="openEdit(${tour.id}, '${tour.route_code}', '${tour.start_date}')"
+${started ? 'disabled' : ''}>
+Edit
+</button>
+
+<button
+onclick="deleteTour(${tour.id})"
+${started ? 'disabled' : ''}>
+Delete
+</button>
+
+</div>
+
+`;
 
       container.appendChild(div);
     });

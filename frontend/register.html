@@ -1,87 +1,150 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<title>Add Tour · Find My Gang</title>
+<title>My Tours · Find My Gang</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="stylesheet" href="css/ios.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Lora:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
 
-<nav class="navbar">
-  <div class="nav-container">
-    <div class="logo">Find My Gang</div>
-    <div class="nav-links">
-      <a href="index.html">Who's around?</a>
-      <a href="register.html">My tours</a>
-      <button onclick="logout()">Logout</button>
-    </div>
-  </div>
-</nav>
+<!-- NAV -->
+<nav class="nav">
 
-<div class="container">
-  <div class="card">
-
-    <h2>Add a Tour</h2>
-
-    <input id="name" placeholder="Your name">
-    <select id="routeCode">
-  <option value="">Select tour</option>
-</select>
-    <input id="startDate" type="date">
-    <input id="phone" placeholder="WhatsApp (optional)">
-
-    <button id="submitBtn" class="search-btn" onclick="register()" disabled>
-      Loading routes…
-    </button>
-
-    <div id="message"></div>
-
-    <hr style="margin:30px 0">
-
-    <h3>Your tours</h3>
-    <div id="userTours"></div>
-
-  </div>
+<div class="nav-logo">
+<span class="logo-dot"></span>
+find my gang
 </div>
 
-<!-- EDIT TOUR MODAL -->
+<div class="nav-links">
+<a href="index.html">Who's around?</a>
+<a href="register.html" class="active">My tours</a>
+</div>
+
+<div class="nav-right">
+<button onclick="logout()" class="logout-btn">Logout</button>
+</div>
+
+</nav>
+
+
+<main>
+
+<!-- HERO -->
+<div class="section-hero">
+
+<h1>My tours 🗺</h1>
+
+<p>
+All the cities where you're guiding a tour
+</p>
+
+</div>
+
+
+<!-- ADD TOUR CARD -->
+<div class="card form-card">
+
+<h2>Add a Tour</h2>
+
+<input id="name" placeholder="Your name">
+
+<select id="routeCode">
+<option value="">Select tour</option>
+</select>
+
+<input id="startDate" type="date">
+
+<input id="phone" placeholder="WhatsApp (optional)">
+
+<button
+id="submitBtn"
+class="search-btn"
+onclick="register()"
+disabled>
+
+Loading routes…
+
+</button>
+
+<div id="message"></div>
+
+</div>
+
+
+<!-- TOUR LIST -->
+<div class="tour-section">
+
+<h3>Your tours</h3>
+
+<div id="userTours" class="tours-list"></div>
+
+</div>
+
+
+</main>
+
+
+
+<!-- EDIT MODAL -->
 <div id="editModal" class="overlay hidden" onclick="closeEdit(event)">
-  <div class="modal">
-    <button class="close-btn" onclick="closeEdit()">✕</button>
 
-    <h2>Edit Tour</h2>
+<div class="modal">
 
-    <input id="editRouteCode" list="routes" placeholder="Tour code" disabled>
-    <input id="editStartDate" type="date">
+<button class="close-btn" onclick="closeEdit()">✕</button>
 
-    <button class="search-btn" onclick="saveEdit()">Save</button>
-    <button class="today-btn" onclick="closeEdit()">Cancel</button>
+<h2>Edit Tour</h2>
 
-    <div id="editMsg"></div>
-  </div>
+<input id="editRouteCode" disabled>
+
+<input id="editStartDate" type="date">
+
+<button class="search-btn" onclick="saveEdit()">Save</button>
+
+<button class="today-btn" onclick="closeEdit()">Cancel</button>
+
+<div id="editMsg"></div>
+
+</div>
+
+</div>
+
+
+<!-- CONFIRM DELETE -->
+<div id="confirmModal" class="confirm-modal hidden">
+
+<div class="confirm-modal-card">
+
+<h3 id="confirmTitle">Confirm</h3>
+
+<p id="confirmMessage"></p>
+
+<div class="confirm-modal-actions">
+
+<button id="confirmCancel" class="btn-secondary">
+Cancel
+</button>
+
+<button id="confirmOk" class="btn-danger">
+Delete
+</button>
+
+</div>
+
+</div>
+
 </div>
 
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js" defer></script>
 <script src="js/register.js" defer></script>
-
-
-<!-- DELETE CONFIRM MODAL -->
-<div id="confirmModal" class="confirm-modal hidden">
-  <div class="confirm-modal-card">
-    
-    <h3 id="confirmTitle">Confirm</h3>
-    <p id="confirmMessage">Are you sure?</p>
-
-    <div class="confirm-modal-actions">
-      <button id="confirmCancel" class="btn-secondary">Cancel</button>
-      <button id="confirmOk" class="btn-danger">Delete</button>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
