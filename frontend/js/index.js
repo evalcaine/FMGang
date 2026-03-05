@@ -1,30 +1,63 @@
 /* ===============================
+   GLOBAL
+================================ */
+
+let currentUserEmail = null;
+
+
+/* ===============================
    HELPERS
 ================================ */
 
 function formatDate(dateString) {
+
   const date = new Date(dateString);
 
-  const dd = String(date.getDate()).padStart(2, '0');
-  const mm = String(date.getMonth() + 1).padStart(2, '0');
-  const yyyy = date.getFullYear();
+  return date.toLocaleDateString(
+    'en-US',
+    {
+      month: 'short',
+      day: 'numeric'
+    }
+  );
 
-  return `${dd}/${mm}/${yyyy}`;
 }
 
-async function setToday() {
+
+function formatToday(date) {
+
+  return date.toLocaleDateString(
+    'en-US',
+    {
+      month: 'long',
+      day: 'numeric'
+    }
+  );
+
+}
+
+
+function setToday() {
+
   const t = new Date();
+
   const yyyy = t.getFullYear();
-  const mm = String(t.getMonth() + 1).padStart(2, '0');
-  const dd = String(t.getDate()).padStart(2, '0');
+  const mm = String(t.getMonth() + 1).padStart(2,'0');
+  const dd = String(t.getDate()).padStart(2,'0');
 
   const today = `${yyyy}-${mm}-${dd}`;
 
   const dateInput = document.getElementById('date');
+
   if (dateInput) {
     dateInput.value = today;
   }
+
+  loadMatches();
+
 }
+
+
 
 /* ===============================
    INIT
@@ -34,21 +67,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const results = document.getElementById('results');
 
-  // 🛑 Guard
   if (!results) return;
 
-  const { data: { session } } = await supabaseClient.auth.getSession();
+  /* TODAY DISPLAY */
+
+  const todayDisplay = document.getElementById('today-display');
+
+  if (todayDisplay) {
+
+    const today = new Date();
+
+    todayDisplay.innerText = formatToday(today);
+
+  }
+
+  /* AUTH CHECK */
+
+  const { data:{ session } } =
+    await supabaseClient.auth.getSession();
 
   if (!session) {
+
     window.location.href = 'login.html';
     return;
+
   }
 
   currentUserEmail = session.user.email;
 
-    await setToday();
-  await loadMatches();   // ✅ controlled call
+  /* SET TODAY */
+
+  setToday();
+
 });
+
+
 /* ===============================
    LOAD MATCHES
 ================================ */
@@ -63,21 +116,29 @@ async function loadMatches() {
   empty.innerHTML = '';
 
   if (!currentUserEmail) {
+
     empty.innerText = 'User not loaded';
     return;
+
   }
 
   if (!dateInput.value) {
+
     empty.innerText = 'Please select a date';
     return;
+
   }
 
   const date = dateInput.value.split('T')[0];
 
-  // update header date label
+  /* UPDATE HEADER DATE */
+
   const resultsDate = document.getElementById('resultsDate');
+
   if (resultsDate) {
+
     resultsDate.innerText = formatDate(date);
+
   }
 
   const url =
@@ -88,33 +149,55 @@ async function loadMatches() {
   let response;
 
   try {
+
     response = await fetch(`/api${url}`);
+
   } catch (err) {
+
     console.error('Network error:', err);
     empty.innerText = 'Cannot reach server';
     return;
+
   }
 
   if (!response.ok) {
+
     empty.innerText = 'Error loading matches';
     return;
+
   }
 
   const data = await response.json();
 
+  /* UPDATE HERO CITY */
+
+  const cityName = document.getElementById('city-name');
+
+  if (Array.isArray(data) && data.length && cityName) {
+
+    cityName.innerText = data[0].city;
+
+  }
+
   if (!Array.isArray(data) || data.length === 0) {
+
     empty.innerText = 'No matches found';
     return;
+
   }
+
+  /* RENDER CARDS */
 
   data.forEach(item => {
 
     if (!item.people || item.people.length === 0) return;
 
     const card = document.createElement('div');
+
     card.className = 'colleague-card';
 
     card.innerHTML = `
+
       <div class="card-city">
         ${item.city}
       </div>
@@ -124,7 +207,9 @@ async function loadMatches() {
       </div>
 
       <div class="card-people">
+
         ${item.people.map(p => `
+
           <button
             class="person"
             onclick="openProfile(
@@ -132,10 +217,15 @@ async function loadMatches() {
               '${item.date}',
               '${p.name.replace(/'/g,"\\'")}'
             )">
+
             ${p.name}
+
           </button>
+
         `).join('')}
+
       </div>
+
     `;
 
     results.appendChild(card);
@@ -143,6 +233,8 @@ async function loadMatches() {
   });
 
 }
+
+
 
 /* ===============================
    OPEN PROFILE
@@ -158,57 +250,65 @@ async function openProfile(city, date, name) {
     `&city=${encodeURIComponent(city)}`;
 
   let response;
+
   try {
+
     response = await fetch(url);
-  } catch (err) {
+
+  } catch {
+
     alert('Network error');
     return;
+
   }
 
   if (!response.ok) {
+
     alert('You can only view profiles if there is a real match');
     return;
+
   }
 
   const profile = await response.json();
 
-  document.getElementById('profileName').innerText = profile.name || '';
-  document.getElementById('profilePhone').innerText =
-    profile.phone ? `📞 ${profile.phone}` : '📞 Phone not shared';
+  document.getElementById('profileName').innerText =
+    profile.name || '';
 
-  document.getElementById('profileOverlay').classList.remove('hidden');
+  document.getElementById('profilePhone').innerText =
+    profile.phone
+      ? `📞 ${profile.phone}`
+      : '📞 Phone not shared';
+
+  document
+    .getElementById('profileOverlay')
+    .classList.remove('hidden');
+
 }
+
+
 
 function closeProfile(event) {
+
   if (!event || event.target.id === 'profileOverlay') {
-    document.getElementById('profileOverlay').classList.add('hidden');
+
+    document
+      .getElementById('profileOverlay')
+      .classList.add('hidden');
+
   }
+
 }
+
+
 
 /* ===============================
    LOGOUT
 ================================ */
 
 async function logout() {
+
   await supabaseClient.auth.signOut();
+
   window.location.href = 'login.html';
+
 }
-
-/* ===============================
-   INIT
-================================ */
-
-window.addEventListener('DOMContentLoaded', async () => {
-
-  const { data: { session } } = await supabaseClient.auth.getSession();
-
-  if (!session) {
-    window.location.href = 'login.html';
-    return;
-  }
-
-  currentUserEmail = session.user.email;
-
-  setToday(); // this already calls loadMatches()
-
-});
