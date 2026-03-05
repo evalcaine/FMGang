@@ -50,7 +50,7 @@ function setToday() {
     dateInput.value = today;
   }
 
-  loadMatches();
+  
 }
 
 
