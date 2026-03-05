@@ -314,28 +314,34 @@ app.get('/api/matches/grouped', async (req, res) => {
         SELECT r.city
         FROM user_trips ut
         JOIN routes r
-        ON UPPER(r.code)=UPPER(ut.route_code)
+          ON UPPER(r.code) = UPPER(ut.route_code)
         WHERE ut.email = $1
+        AND $2::date BETWEEN ut.start_date AND ut.end_date
         AND r.day_offset = ($2::date - ut.start_date)
+        LIMIT 1
       ),
       others_on_date AS (
         SELECT ut.email, ut.name, r.city
         FROM user_trips ut
         JOIN routes r
-        ON UPPER(r.code)=UPPER(ut.route_code)
+          ON UPPER(r.code) = UPPER(ut.route_code)
         WHERE ut.email <> $1
+        AND $2::date BETWEEN ut.start_date AND ut.end_date
         AND r.day_offset = ($2::date - ut.start_date)
       )
       SELECT
-        o.city,
+        m.city,
         $2::date AS date,
-        json_agg(
-          jsonb_build_object('name', o.name)
+        COALESCE(
+          json_agg(
+            jsonb_build_object('name', o.name)
+          ) FILTER (WHERE o.name IS NOT NULL),
+          '[]'
         ) AS people
-      FROM others_on_date o
-      JOIN my_city m
-      ON m.city = o.city
-      GROUP BY o.city
+      FROM my_city m
+      LEFT JOIN others_on_date o
+        ON m.city = o.city
+      GROUP BY m.city
       `,
       [email, date]
     );
@@ -350,6 +356,7 @@ app.get('/api/matches/grouped', async (req, res) => {
   }
 
 });
+
 
 /* ===============================
    PROFILE
