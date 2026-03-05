@@ -233,8 +233,8 @@ gap:14px;
 ====================================================== */
 .container {
   width: 100%;
-  max-width: 640px;   /* wider on larger screens */
-  margin: 60px auto;
+  max-width: 780px;   /* match main layout width */
+  margin: 40px auto;
   padding: 0 20px;
 }
 
