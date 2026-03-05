@@ -4,6 +4,10 @@
 
 let currentUserEmail = null;
 
+let dateTimer = null;
+
+let lastDateLoaded = null;
+
 
 /* ===============================
    HELPERS
@@ -67,7 +71,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   /* DATE CHANGE */
 
   if (dateInput) {
-    dateInput.addEventListener('change', loadMatches);
+    dateInput.addEventListener('input', () => {
+
+  clearTimeout(dateTimer);
+
+  dateTimer = setTimeout(() => {
+    loadMatches();
+  }, 400);
+
+});
   }
 
   /* INITIAL LOAD */
@@ -102,6 +114,11 @@ async function loadMatches() {
 
   const date = dateInput.value.split('T')[0];
 
+  /* PREVENT DUPLICATE REQUESTS */
+
+if (date === lastDateLoaded) return;
+lastDateLoaded = date;
+
   /* HEADER DATE */
 
   const resultsDate = document.getElementById('resultsDate');
@@ -130,17 +147,21 @@ async function loadMatches() {
 
   const data = await response.json();
 
+  
   /* HERO CITY */
 
-  const cityName = document.getElementById('city-name');
-  if (Array.isArray(data) && data.length && cityName) {
-    cityName.innerText = data[0].city;
-  }
+const cityName = document.getElementById('city-name');
 
-  if (!Array.isArray(data) || data.length === 0) {
-    empty.innerText = 'No matches found';
-    return;
-  }
+if (Array.isArray(data) && data.length && cityName) {
+  cityName.innerText = data[0].city;
+}
+
+/* NO MATCHES */
+
+if (!Array.isArray(data) || data.length === 0) {
+  empty.innerText = 'No colleagues in this city for this date';
+  return;
+}
 
   /* CARDS */
 
