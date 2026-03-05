@@ -145,25 +145,25 @@ lastDateLoaded = date;
     return;
   }
 
-  const { city, matches } = await response.json();
+ const data = await response.json();
 
   
   /* HERO CITY */
 
 const cityName = document.getElementById('city-name');
 
-if (Array.isArray(data) && data.length && cityName) {
-  cityName.innerText = data[0].city;
-}
-
 if (!Array.isArray(data) || !data.length) {
   empty.innerText = 'No colleagues in this city for this date';
   return;
 }
 
-const people = data[0].people || [];
+const item = data[0];
 
-if (!people.length) {
+if (cityName) {
+  cityName.innerText = item.city;
+}
+
+if (!item.people || item.people.length === 0) {
   empty.innerText = 'No colleagues in this city for this date';
   return;
 }
