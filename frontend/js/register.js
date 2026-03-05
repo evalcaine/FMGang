@@ -170,6 +170,9 @@ async function loadUserTours() {
 /* ===============================
    REGISTER
 ================================ */
+/* ===============================
+   REGISTER
+================================ */
 async function register() {
 
   const msg = document.getElementById('message');
@@ -194,49 +197,56 @@ async function register() {
 
   btn.disabled = true;
 
-  await supabaseClient.from('profiles').upsert({
-    id: currentUser.id,
-    name,
-    phone
-  });
+  try {
 
-try {
-  const res = await fetch('/api/trips', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    email: currentUser.email,
-    name,
-    routeCode,
-    startDate
-  })
-});
+    await supabaseClient.from('profiles').upsert({
+      id: currentUser.id,
+      name,
+      phone
+    });
 
-btn.disabled = false;
+    const res = await fetch('/api/trips', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: currentUser.email,
+        name,
+        routeCode,
+        startDate
+      })
+    });
 
-let data;
-try {
-  data = await res.json();
-} catch {
-  data = {};
-}
+    let data = {};
+    try {
+      data = await res.json();
+    } catch {}
 
-if (res.ok) {
+    btn.disabled = false;
 
-  msg.innerHTML = '<div class="success">Tour added!</div>';
+    if (res.ok) {
 
-}
+      msg.innerHTML = '<div class="success">Tour added!</div>';
 
-  document.getElementById('routeCode').value = '';
-  document.getElementById('startDate').value = '';
+      document.getElementById('routeCode').value = '';
+      document.getElementById('startDate').value = '';
 
-  await loadUserTours();
+      await loadUserTours();
 
-} else {
+    } else {
 
-  msg.innerHTML =
-    `<div class="error">${data.error || "Server error"}</div>`;
+      msg.innerHTML =
+        `<div class="error">${data.error || "Server error"}</div>`;
 
+    }
+
+  } catch (err) {
+
+    console.error(err);
+
+    btn.disabled = false;
+    msg.innerHTML = '<div class="error">Server connection failed</div>';
+
+  }
 }
 
 
