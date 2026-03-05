@@ -1,152 +1,147 @@
 /* ======================================================
-   VARIABLES — CLEAN TRAVEL MINIMAL
+   ROOT VARIABLES
 ====================================================== */
+
 :root {
 
 --bg: #f7f4ef;
 --surface: #ffffff;
 --border: #e8e2d9;
 
---peach: #f9c5a3;
---peach-mid: #f4a97e;
-
---sage: #b8d4bc;
---sage-mid: #8dbb93;
-
---sky: #b3d4e8;
---sky-mid: #7fb8d8;
-
---lemon: #f5e6a0;
-
 --ink: #2e2a24;
 --ink-soft: #6b6358;
 --ink-faint: #a09890;
 
+--primary: #2e2a24;
+--danger: #e53935;
+
+--match-bg: #f2efe9;
+
 --radius: 16px;
+--radius-sm: 12px;
 
 }
+
+
+
 /* ======================================================
-   RESET + BASE
+   RESET
 ====================================================== */
+
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+box-sizing:border-box;
 }
 
 body{
+margin:0;
 background:var(--bg);
 color:var(--ink);
-font-family:'Nunito',sans-serif;
+font-family:'Nunito',system-ui,sans-serif;
 }
 
-.hidden {
-  display: none !important;
+.hidden{
+display:none!important;
 }
 
-/* ======================================================
-   HEADER BRANDING
-====================================================== */
-header {
-  text-align: center;
-  padding-top: 48px;
-  margin-bottom: 32px;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 26px;
-  font-weight: 600;
-  color: var(--primary);
-  letter-spacing: -0.3px;
-}
-
-header p {
-  margin: 8px 0 0 0;
-  font-size: 13px;
-  color: var(--text-secondary);
-  letter-spacing: 0.4px;
-}
 
 
 /* ======================================================
    NAVBAR
 ====================================================== */
-.nav {
-  position: sticky;
-  top: 0;
-  background: #f7f4ef;
-  border-bottom: 1px solid #e8e2d9;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.nav{
 
-  padding: 14px 24px;
+position:sticky;
+top:0;
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+background:var(--bg);
+border-bottom:1px solid var(--border);
+
+padding:14px 24px;
+
 }
 
-.nav-logo {
-  font-weight: 800;
-  font-size: 18px;
+.nav-logo{
+font-weight:800;
+font-size:18px;
 }
 
-.nav-links {
-  display: flex;
-  gap: 18px;
+.nav-links{
+display:flex;
+gap:18px;
 }
 
-.nav-links a {
-  text-decoration: none;
-  color: #6b6358;
-  font-weight: 600;
+.nav-links a{
+text-decoration:none;
+color:var(--ink-soft);
+font-weight:600;
 }
 
-.nav-links a.active {
-  color: #2e2a24;
+.nav-links a.active{
+color:var(--ink);
 }
 
-.nav-right {
-  margin-left: auto;
+.logout-btn{
+background:none;
+border:none;
+cursor:pointer;
+font-weight:600;
+color:var(--ink-soft);
 }
 
-.logout-btn {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-weight: 600;
-  color: #6b6358;
-}
 
-/* ===============================
-MAIN LAYOUT
-=============================== */
 
-main{
+/* ======================================================
+   MAIN LAYOUT
+====================================================== */
+
+main,
+.container{
+
 max-width:780px;
+
 margin:0 auto;
+
 padding:48px 24px 80px;
+
+}
+
+@media (max-width:768px){
+
+main,
+.container{
+padding:32px 16px;
+}
+
 }
 
 
-/* HERO */
+
+/* ======================================================
+   HERO
+====================================================== */
 
 .hero{
 margin-bottom:36px;
 }
 
 .hero-eyebrow{
-font-family:'Lora',serif;
-font-style:italic;
 font-size:.9rem;
 color:var(--ink-faint);
 margin-bottom:6px;
+font-style:italic;
 }
 
 .hero h1{
-font-size:2.2rem;
-font-weight:900;
-letter-spacing:-.03em;
-margin-bottom:6px;
+font-size:2rem;
+font-weight:800;
+margin:0 0 6px 0;
 }
 
 .hero-sub{
@@ -155,7 +150,10 @@ color:var(--ink-faint);
 }
 
 
-/* DATE BAR */
+
+/* ======================================================
+   DATE BAR
+====================================================== */
 
 .date-bar{
 
@@ -164,523 +162,85 @@ align-items:center;
 gap:10px;
 
 background:var(--surface);
-
-border:1.5px solid var(--border);
+border:1px solid var(--border);
 
 border-radius:40px;
 
 padding:10px 14px;
-
 margin-bottom:32px;
 
 }
 
 .date-input{
-
 flex:1;
 border:none;
 background:none;
-font-weight:700;
-
+font-weight:600;
 }
 
 
-/* RESULTS HEADER */
+
+/* ======================================================
+   RESULTS HEADER
+====================================================== */
 
 .results-header{
 
 display:flex;
-
 justify-content:space-between;
-
 margin-bottom:16px;
 
 }
 
 .results-title{
-
-font-weight:800;
-
+font-weight:700;
 }
 
 .results-count{
-
-font-style:italic;
-
-font-family:'Lora',serif;
-
+font-size:.85rem;
 color:var(--ink-faint);
-
 }
 
 
-/* GRID */
+
+/* ======================================================
+   GRID
+====================================================== */
 
 .cards-grid{
 
 display:grid;
 
 grid-template-columns:
-repeat(auto-fill,minmax(200px,1fr));
+repeat(auto-fill,minmax(220px,1fr));
 
-gap:14px;
+gap:16px;
 
 }
-
-
-/* ======================================================
-   LAYOUT
-====================================================== */
-.container {
-  width: 100%;
-  max-width: 780px;   /* match main layout width */
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-@media (max-width: 768px) {
-  .container {
-    max-width: 100%;
-    padding: 0 16px;
-  }
-}
-
-.card {
-  background: var(--bg-card);
-  padding: 22px;  /* balanced width */
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-light);
-  box-shadow: var(--shadow-soft);
-  transition: var(--transition-smooth);
-}
-
-.card:hover {
-  box-shadow: var(--shadow-hover);
-}
-
-
-/* ======================================================
-   TYPOGRAPHY
-====================================================== */
-h1, h2, h3 {
-  margin-top: 0;
-  text-align: center;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-}
-
-p {
-  margin: 0;
-  color: var(--text-secondary);
-}
-
-
-/* ======================================================
-   FORM CONTROLS
-====================================================== */
-input,
-button,
-select {
-  width: 100%;
-  height: 48px;
-  padding: 0 14px;
-  margin-top: 14px;
-  border-radius: var(--radius-md);
-  font-size: 15px;
-  box-sizing: border-box;
-}
-
-input,
-select {
-  border: 1px solid var(--border-light);
-  background: var(--bg-card);
-  outline: none;
-  transition: var(--transition-fast);
-}
-
-input:focus,
-select:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-}
-
-/* ======================================================
-   SELECT — CUSTOM ARROW (ALL DEVICES)
-====================================================== */
-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  padding-right: 36px;
-  cursor: pointer;
-
-  background-image: url("data:image/svg+xml;utf8,\
-  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' width='16' height='16' fill='%2364748B'>\
-  <path d='M5.5 7l4.5 4 4.5-4'/>\
-  </svg>");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 16px;
-}
-
-/* Phone selector narrower */
-.phone-group {
-  display: flex;
-  gap: 8px;
-}
-
-.phone-group select {
-  width: 110px;
-  margin-top: 14px;
-}
-
-.phone-group input {
-  flex: 1;
-  margin-top: 14px;
-}
-
-/* ======================================================
-   DATE INPUT — CUSTOM ICON
-====================================================== */
-input[type="date"] {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  padding-right: 40px;
-
-  background-image: url("data:image/svg+xml;utf8,\
-  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='18' height='18' fill='%2364748B'>\
-  <path d='M7 2v2H5a2 2 0 00-2 2v2h18V6a2 2 0 00-2-2h-2V2h-2v2H9V2H7zm14 8H3v10a2 2 0 002 2h14a2 2 0 002-2V10z'/>\
-  </svg>");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 18px;
-}
-
-/* Remove native calendar completely */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  display: none;
-}
-
-input[type="date"]::-ms-expand,
-input[type="date"]::-ms-clear {
-  display: none;
-}
-
-/* ======================================================
-   BUTTONS
-====================================================== */
-button {
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: var(--transition-fast);
-}
-
-.search-btn {
-  background: var(--primary);
-  color: white;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-
-.search-btn:hover {
-  background: var(--primary-hover);
-}
-
-.today-btn {
-  background: var(--match-bg);
-  color: var(--match);
-  border: 1px solid var(--match);
-}
-
-.today-btn:hover {
-  background: var(--match);
-  color: white;
-}
-
-button:active {
-  transform: scale(0.97);
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-
-/* ======================================================
-   MATCH CARDS
-====================================================== */
-.city {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--primary);
-  margin-bottom: 6px;
-}
-
-.date {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 12px;
-}
-
-.person {
-  display: inline-block;
-  background: var(--match-bg);
-  color: var(--match);
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  margin: 4px 6px 0 0;
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-
-.person:hover {
-  background: var(--match);
-  color: white;
-}
-
-
-/* ======================================================
-   MODAL
-====================================================== */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 1000;
-}
-
-.modal {
-  background: var(--bg-card);
-  width: 100%;
-  max-width: 340px;
-  padding: 40px 24px 28px;
-  border-radius: 20px;
-  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
-  position: relative;
-  text-align: center;
-}
-
-.modal h2 {
-  margin: 0 0 12px 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-
-/* ======================================================
-   MODAL BUTTON + TEXT
-====================================================== */
-.close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--border-light);
-  font-size: 16px;
-  cursor: pointer;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition-fast);
-}
-
-.close-btn:hover {
-  background: var(--primary);
-  color: white;
-}
-
-.phone {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--primary);
-  margin-bottom: 8px;
-}
-
-.note {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 14px;
-}
-
-
-/* ===============================
-   TOUR ACTION COLORS ONLY
-================================ */
-
-/* EDIT */
-.tour-item button:first-of-type {
-  background: var(--primary);
-  color: white;
-  border: none;
-}
-
-.tour-item button:first-of-type:hover {
-  background: var(--primary-hover);
-}
-
-/* DELETE */
-.tour-item button:last-of-type {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--danger);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.tour-item button:last-of-type:hover {
-  background: var(--danger);
-  color: white;
-}
-
-/* ===============================
-   DISABLED TOUR ACTIONS — ELEGANT
-================================ */
-
-.tour-item button:disabled {
-  background: #F3F4F6 !important;
-  color: #9CA3AF !important;
-  border: 1px solid #E5E7EB !important;
-  cursor: not-allowed;
-  pointer-events: none;
-  box-shadow: none !important;
-  opacity: 1;
-}
-
-.tour-item button:disabled:hover {
-  background: #F3F4F6 !important;
-  color: #9CA3AF !important;
-}
-
 
 
 
 /* ======================================================
-   AUTH LINKS
+   MATCH CARD
 ====================================================== */
-.auth-actions,
-.auth-switch {
-  margin-top: 1rem;
-  text-align: center;
-}
-
-.link {
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.link.subtle {
-  color: var(--text-secondary);
-}
-
-.link.subtle:hover {
-  color: var(--text-main);
-}
-
-.link.strong {
-  font-weight: 600;
-  color: var(--primary);
-}
-
-.link.strong::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0%;
-  height: 2px;
-  background: var(--primary);
-  transition: width 0.2s ease;
-}
-
-.link.strong:hover::after {
-  width: 100%;
-}
-
-
-/* ===============================
-   CONFIRM MODAL 
-================================ */
-
-.confirm-modal {
-  position: fixed;
-  inset: 0;
-  display: grid;
-  place-items: center; /* perfect centering */
-  z-index: 9999;
-  background: transparent !important; /* force remove overlay */
-}
-
-
-
-.confirm-modal-card {
-  background: #ffffff;
-  padding: 24px;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 360px;
-  text-align: center;
-  box-shadow:
-    0 30px 80px rgba(0,0,0,0.25),
-    0 10px 20px rgba(0,0,0,0.1);
-}
-
-/* Buttons */
-.confirm-modal-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.btn-secondary {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  background: #f5f5f5;
-  cursor: pointer;
-}
-
-.btn-danger {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background: #e53935;
-  color: white;
-  cursor: pointer;
-}
-
-
-
-/* ===============================
-COLLEAGUE CARD
-=============================== */
 
 .colleague-card{
-background:white;
+
+background:var(--surface);
+
 border:1px solid var(--border);
-border-radius:16px;
+
+border-radius:var(--radius);
+
 padding:18px;
-transition:.2s;
+
+transition:.15s;
+
 }
 
 .colleague-card:hover{
 transform:translateY(-3px);
-box-shadow:0 8px 18px rgba(0,0,0,.08);
+box-shadow:0 6px 16px rgba(0,0,0,.06);
 }
 
 .card-city{
@@ -701,45 +261,179 @@ gap:6px;
 }
 
 
-/* ===============================
-TOURS LIST
-=============================== */
 
-.tours-list{
-display:flex;
-flex-direction:column;
-gap:12px;
-margin-top:12px;
+/* ======================================================
+   PERSON BADGE
+====================================================== */
+
+.person{
+
+background:var(--match-bg);
+
+border-radius:var(--radius-sm);
+
+padding:6px 12px;
+
+font-size:.85rem;
+
+cursor:pointer;
+
 }
 
-.tour-item{
+.person:hover{
+background:#e9e4da;
+}
 
-background:white;
+
+
+/* ======================================================
+   FORM CONTROLS
+====================================================== */
+
+input,
+select{
+
+width:100%;
+
+height:44px;
+
+margin-top:12px;
+
+padding:0 12px;
+
+border-radius:var(--radius-sm);
 
 border:1px solid var(--border);
 
-border-radius:16px;
+background:var(--surface);
 
-padding:16px;
+}
+
+
+
+/* ======================================================
+   BUTTONS
+====================================================== */
+
+button{
+
+height:44px;
+
+border:none;
+
+border-radius:var(--radius-sm);
+
+cursor:pointer;
+
+font-weight:600;
+
+padding:0 16px;
+
+}
+
+.search-btn{
+background:var(--ink);
+color:white;
+}
+
+.today-btn{
+background:var(--match-bg);
+}
+
+button:disabled{
+opacity:.5;
+cursor:not-allowed;
+}
+
+
+
+/* ======================================================
+   MODAL
+====================================================== */
+
+.overlay{
+
+position:fixed;
+
+inset:0;
+
+background:rgba(0,0,0,.35);
 
 display:flex;
 
 align-items:center;
 
-gap:14px;
+justify-content:center;
 
-justify-content:space-between;
+padding:20px;
 
 }
 
-.tour-color-dot{
+.modal{
 
-width:12px;
-height:12px;
+background:white;
 
-border-radius:50%;
+padding:30px;
 
-background:var(--peach-mid);
+border-radius:20px;
+
+max-width:340px;
+
+width:100%;
+
+position:relative;
+
+text-align:center;
+
+}
+
+.close-btn{
+
+position:absolute;
+
+top:12px;
+right:12px;
+
+border:none;
+background:none;
+
+cursor:pointer;
+
+}
+
+
+
+/* ======================================================
+   TOURS LIST
+====================================================== */
+
+.tours-list{
+
+display:flex;
+flex-direction:column;
+gap:12px;
+
+margin-top:12px;
+
+}
+
+.tour-item{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+gap:12px;
+
+background:var(--surface);
+
+border:1px solid var(--border);
+
+border-radius:var(--radius);
+
+padding:14px;
 
 }
 
@@ -753,17 +447,85 @@ font-weight:800;
 }
 
 .tour-info span{
-
 font-size:.85rem;
-
 color:var(--ink-faint);
-
 }
 
 .tour-actions{
+display:flex;
+gap:6px;
+}
+
+
+
+/* ======================================================
+   CONFIRM MODAL
+====================================================== */
+
+.confirm-modal{
+
+position:fixed;
+
+inset:0;
+
+display:grid;
+
+place-items:center;
+
+z-index:9999;
+
+}
+
+.confirm-modal-card{
+
+background:white;
+
+padding:24px;
+
+border-radius:16px;
+
+width:90%;
+max-width:360px;
+
+text-align:center;
+
+box-shadow:
+0 20px 50px rgba(0,0,0,.2);
+
+}
+
+.confirm-modal-actions{
 
 display:flex;
+gap:10px;
+margin-top:20px;
 
-gap:6px;
+}
+
+.btn-secondary{
+
+flex:1;
+
+border:1px solid var(--border);
+
+background:#f5f5f5;
+
+border-radius:10px;
+
+height:40px;
+
+}
+
+.btn-danger{
+
+flex:1;
+
+background:var(--danger);
+
+color:white;
+
+border-radius:10px;
+
+height:40px;
 
 }
