@@ -214,12 +214,12 @@ async function register() {
   btn.disabled = false;
 
   if (res.ok) {
-    msg.innerHTML = '<div class="success">Tour added successfully!</div>';
+    msg.innerHTML = '<div class="success">✅ Tour added!</div>';
     document.getElementById('routeCode').value = '';
     document.getElementById('startDate').value = '';
     await loadUserTours();
   } else {
-    msg.innerHTML = '<div class="error">Error adding tour</div>';
+    msg.innerHTML = '<div class="error">‼️ Error adding tour - check the dates</div>';
   }
 }
 
