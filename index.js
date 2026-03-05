@@ -310,38 +310,45 @@ app.get('/api/matches/grouped', async (req, res) => {
 
     const result = await pool.query(
       `
-      WITH my_city AS (
-        SELECT r.city
-        FROM user_trips ut
-        JOIN routes r
-          ON UPPER(r.code) = UPPER(ut.route_code)
-        WHERE ut.email = $1
-        AND $2::date BETWEEN ut.start_date AND ut.end_date
-        AND r.day_offset = ($2::date - ut.start_date)
-        LIMIT 1
-      ),
-      others_on_date AS (
-        SELECT ut.email, ut.name, r.city
-        FROM user_trips ut
-        JOIN routes r
-          ON UPPER(r.code) = UPPER(ut.route_code)
-        WHERE ut.email <> $1
-        AND $2::date BETWEEN ut.start_date AND ut.end_date
-        AND r.day_offset = ($2::date - ut.start_date)
-      )
-      SELECT
-        m.city,
-        $2::date AS date,
-        COALESCE(
-          json_agg(
-            jsonb_build_object('name', o.name)
-          ) FILTER (WHERE o.name IS NOT NULL),
-          '[]'
-        ) AS people
-      FROM my_city m
-      LEFT JOIN others_on_date o
-        ON m.city = o.city
-      GROUP BY m.city
+      WITH my_trip AS (
+  SELECT
+    ut.route_code,
+    ($2::date - ut.start_date) AS trip_day
+  FROM user_trips ut
+  WHERE ut.email = $1
+  AND $2::date BETWEEN ut.start_date AND ut.end_date
+  LIMIT 1
+),
+my_city AS (
+  SELECT r.city
+  FROM routes r
+  JOIN my_trip mt
+    ON r.code = mt.route_code
+   AND r.day_offset = mt.trip_day
+),
+others_on_date AS (
+  SELECT ut.name, r.city
+  FROM user_trips ut
+  JOIN routes r
+    ON r.code = ut.route_code
+  JOIN my_trip mt
+    ON r.day_offset = mt.trip_day
+  WHERE ut.email <> $1
+  AND $2::date BETWEEN ut.start_date AND ut.end_date
+)
+
+SELECT
+  m.city,
+  $2::date AS date,
+  COALESCE(
+    json_agg(jsonb_build_object('name', o.name))
+    FILTER (WHERE o.name IS NOT NULL),
+    '[]'
+  ) AS people
+FROM my_city m
+LEFT JOIN others_on_date o
+  ON m.city = o.city
+GROUP BY m.city;
       `,
       [email, date]
     );
