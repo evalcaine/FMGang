@@ -9,8 +9,6 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-//  FRONTEND ESTÁTICO
 app.use(express.static(path.join(__dirname, 'frontend')));
 
 /* ===============================
@@ -20,16 +18,13 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 const connectionString =
   process.env.DATABASE_URL || process.env.SUPABASE_DB_URL;
 
-const hasDatabaseUrl = Boolean(connectionString);
-
-const pool = hasDatabaseUrl
+const pool = connectionString
   ? new Pool({
       connectionString,
       ssl: { rejectUnauthorized: false }
     })
   : null;
 
-// DEFINE ensureDatabase HERE
 function ensureDatabase(res) {
   if (!pool) {
     res.status(500).json({ error: 'Database not configured' });
@@ -39,27 +34,98 @@ function ensureDatabase(res) {
 }
 
 /* ===============================
-   ROOT → FRONTEND
+   HELPERS
 ================================ */
+
+async function calculateEndDate(routeCode, startDate) {
+
+  const duration = await pool.query(
+    `
+    SELECT MAX(day_offset) AS max_day
+    FROM routes
+    WHERE UPPER(code)=UPPER($1)
+    `,
+    [routeCode]
+  );
+
+  if (!duration.rows[0].max_day) {
+    throw new Error('Invalid route');
+  }
+
+  const maxDay = duration.rows[0].max_day;
+
+  const endDateResult = await pool.query(
+    `
+    SELECT ($1::date + $2 * INTERVAL '1 day')::date AS end_date
+    `,
+    [startDate, maxDay]
+  );
+
+  return endDateResult.rows[0].end_date;
+}
+
+async function checkOverlap(email, startDate, endDate, excludeId = null) {
+
+  let query = `
+  SELECT 1
+  FROM user_trips
+  WHERE email = $1
+  AND start_date < $3
+  AND end_date > $2
+  AND end_date <> $2
+  `;
+
+  const params = [email, startDate, endDate];
+
+  if (excludeId) {
+    query += ` AND id <> $4`;
+    params.push(excludeId);
+  }
+
+  query += ` LIMIT 1`;
+
+  const conflict = await pool.query(query, params);
+
+  return conflict.rowCount > 0;
+}
+
+/* ===============================
+   ROOT
+================================ */
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
 /* ===============================
-   ROUTES
+   ROUTES LIST
 ================================ */
+
 app.get('/api/routes', async (_, res) => {
   if (!ensureDatabase(res)) return;
-  const r = await pool.query(
-    `SELECT DISTINCT code FROM routes ORDER BY code`
-  );
-  res.json(r.rows);
+
+  try {
+
+    const r = await pool.query(
+      `SELECT DISTINCT code FROM routes ORDER BY code`
+    );
+
+    res.json(r.rows);
+
+  } catch (err) {
+
+    console.error('ROUTES ERROR:', err);
+    res.status(500).json({ error: 'Failed to load routes' });
+
+  }
 });
 
 /* ===============================
-   CREATE TOUR
+   CREATE TRIP
 ================================ */
+
 app.post('/api/trips', async (req, res) => {
+
   if (!ensureDatabase(res)) return;
 
   const { email, name, routeCode, startDate } = req.body;
@@ -70,85 +136,75 @@ app.post('/api/trips', async (req, res) => {
 
   try {
 
-    // Get route duration
-    const duration = await pool.query(
-      `SELECT MAX(day_offset) AS max_day
-       FROM routes
-       WHERE UPPER(code)=UPPER($1)`,
-      [routeCode]
-    );
+    const endDate = await calculateEndDate(routeCode, startDate);
 
-    if (!duration.rows[0].max_day) {
-      return res.status(400).json({ error: 'Invalid route' });
+    const overlap = await checkOverlap(email, startDate, endDate);
+
+    if (overlap) {
+      return res.status(400).json({
+        error: 'Trip overlaps an existing trip'
+      });
     }
 
-    const maxDay = duration.rows[0].max_day;
-
-    // Calculate end date
-    const endDateResult = await pool.query(
-      `SELECT ($1::date + $2 * INTERVAL '1 day')::date AS end_date`,
-      [startDate, maxDay]
+    await pool.query(
+      `
+      INSERT INTO user_trips
+      (email,name,route_code,start_date,end_date)
+      VALUES ($1,$2,UPPER($3),$4,$5)
+      `,
+      [email, name, routeCode, startDate, endDate]
     );
 
-    const endDate = endDateResult.rows[0].end_date;
+    res.json({ ok: true });
 
-   // Check for overlapping trips
-const conflict = await pool.query(
-  `
-  SELECT 1
-  FROM user_trips
-  WHERE email = $1
-  AND start_date < $3
-  AND end_date > $2
-  AND end_date <> $2
-  LIMIT 1
-  `,
-  [email, startDate, endDate]
-);
+  } catch (err) {
 
-if (conflict.rowCount > 0) {
-  return res.status(400).json({
-    error: 'Trip overlaps an existing trip'
-  });
-}
+    console.error('CREATE TRIP ERROR:', err);
+    res.status(500).json({ error: err.message });
 
-// Insert trip
-await pool.query(
-  `INSERT INTO user_trips (email,name,route_code,start_date,end_date)
-   VALUES ($1,$2,UPPER($3),$4,$5)`,
-  [email, name, routeCode, startDate, endDate]
-);
+  }
 
-res.json({ ok: true });
-}
+});
 
 /* ===============================
    USER TOURS
 ================================ */
+
 app.get('/api/user-tours', async (req, res) => {
-    if (!ensureDatabase(res)) return;
+
+  if (!ensureDatabase(res)) return;
+
   const { email } = req.query;
 
-  const r = await pool.query(
-    `
-    SELECT ut.id, ut.route_code, ut.start_date,
-           MAX(ut.start_date + r.day_offset) end_date
-    FROM user_trips ut
-    JOIN routes r ON UPPER(r.code)=UPPER(ut.route_code)
-    WHERE ut.email=$1
-    GROUP BY ut.id
-    ORDER BY ut.start_date
-    `,
-    [email]
-  );
+  try {
 
-  res.json(r.rows);
+    const result = await pool.query(
+      `
+      SELECT id, route_code, start_date, end_date
+      FROM user_trips
+      WHERE email = $1
+      ORDER BY start_date
+      `,
+      [email]
+    );
+
+    res.json(result.rows);
+
+  } catch (err) {
+
+    console.error('USER TOURS ERROR:', err);
+    res.status(500).json({ error: 'Failed to load tours' });
+
+  }
+
 });
 
-/*===================================
-EDIT SAVE
-==============================*/
+/* ===============================
+   EDIT TRIP
+================================ */
+
 app.put('/api/user-tours/:id', async (req, res) => {
+
   if (!ensureDatabase(res)) return;
 
   const { id } = req.params;
@@ -159,15 +215,27 @@ app.put('/api/user-tours/:id', async (req, res) => {
   }
 
   try {
+
+    const endDate = await calculateEndDate(routeCode, startDate);
+
+    const overlap = await checkOverlap(email, startDate, endDate, id);
+
+    if (overlap) {
+      return res.status(400).json({
+        error: 'Trip overlaps an existing trip'
+      });
+    }
+
     const result = await pool.query(
       `
       UPDATE user_trips
       SET route_code = UPPER($1),
-          start_date = $2
-      WHERE id = $3
-        AND email = $4
+          start_date = $2,
+          end_date = $3
+      WHERE id = $4
+      AND email = $5
       `,
-      [routeCode, startDate, id, email]
+      [routeCode, startDate, endDate, id, email]
     );
 
     if (!result.rowCount) {
@@ -177,98 +245,96 @@ app.put('/api/user-tours/:id', async (req, res) => {
     res.json({ ok: true });
 
   } catch (err) {
+
     console.error('UPDATE ERROR:', err);
     res.status(500).json({ error: 'Update failed' });
+
   }
+
 });
 
 /* ===============================
-   DELETE USER TOUR
+   DELETE TRIP
 ================================ */
+
 app.delete('/api/user-tours/:id', async (req, res) => {
+
   if (!ensureDatabase(res)) return;
 
   const { id } = req.params;
   const { email } = req.query;
 
-  if (!id || !email) {
-    return res.status(400).json({ error: 'Missing id or email' });
-  }
-
   try {
+
     const result = await pool.query(
-      `DELETE FROM user_trips 
-       WHERE id = $1 
-       AND email = $2`,
+      `
+      DELETE FROM user_trips
+      WHERE id = $1
+      AND email = $2
+      `,
       [id, email]
     );
 
-    if (result.rowCount === 0) {
+    if (!result.rowCount) {
       return res.status(404).json({ error: 'Tour not found' });
     }
 
     res.json({ success: true });
 
   } catch (err) {
+
     console.error('DELETE ERROR:', err);
     res.status(500).json({ error: 'Delete failed' });
+
   }
+
 });
 
 /* ===============================
-   MATCHES (REAL)
+   MATCHES
 ================================ */
+
 app.get('/api/matches/grouped', async (req, res) => {
+
   if (!ensureDatabase(res)) return;
 
   const { email, date } = req.query;
 
   if (!email || !date) {
     return res.status(400).json({
-      error: 'Missing required query params: email and date'
-    });
-  }
-
-  const parsedDate = new Date(date);
-  if (Number.isNaN(parsedDate.getTime())) {
-    return res.status(400).json({
-      error: 'Invalid date format. Use YYYY-MM-DD'
+      error: 'Missing required query params'
     });
   }
 
   try {
+
     const result = await pool.query(
       `
       WITH my_city AS (
         SELECT r.city
         FROM user_trips ut
         JOIN routes r
-          ON UPPER(r.code) = UPPER(ut.route_code)
+        ON UPPER(r.code)=UPPER(ut.route_code)
         WHERE ut.email = $1
-          AND r.day_offset = ($2::date - ut.start_date)
+        AND r.day_offset = ($2::date - ut.start_date)
       ),
       others_on_date AS (
-        SELECT
-          ut.email,
-          ut.name,
-          r.city
+        SELECT ut.email, ut.name, r.city
         FROM user_trips ut
         JOIN routes r
-          ON UPPER(r.code) = UPPER(ut.route_code)
+        ON UPPER(r.code)=UPPER(ut.route_code)
         WHERE ut.email <> $1
-          AND r.day_offset = ($2::date - ut.start_date)
+        AND r.day_offset = ($2::date - ut.start_date)
       )
       SELECT
         o.city,
         $2::date AS date,
         json_agg(
-          jsonb_build_object(
-            'name', o.name
-          )
+          jsonb_build_object('name', o.name)
         ) AS people
       FROM others_on_date o
       JOIN my_city m
-        ON m.city = o.city
+      ON m.city = o.city
       GROUP BY o.city
       `,
       [email, date]
@@ -277,38 +343,50 @@ app.get('/api/matches/grouped', async (req, res) => {
     res.json(result.rows);
 
   } catch (err) {
+
     console.error('MATCH ERROR:', err);
+    res.status(500).json({ error: 'Match error' });
 
-    const message =
-      err.code === 'ECONNREFUSED'
-        ? 'Database connection refused'
-        : 'Match error';
-
-    res.status(500).json({ error: message });
   }
+
 });
 
 /* ===============================
-   PROFILE (NUEVO)
+   PROFILE
 ================================ */
+
 app.get('/api/profile', async (req, res) => {
+
   if (!ensureDatabase(res)) return;
 
   const { name } = req.query;
 
-  const r = await pool.query(
-    `SELECT name, phone FROM profiles WHERE name=$1`,
-    [name]
-  );
+  try {
 
-  if (!r.rowCount) return res.sendStatus(403);
-  res.json(r.rows[0]);
+    const r = await pool.query(
+      `SELECT name, phone FROM profiles WHERE name=$1`,
+      [name]
+    );
+
+    if (!r.rowCount) return res.sendStatus(403);
+
+    res.json(r.rows[0]);
+
+  } catch (err) {
+
+    console.error('PROFILE ERROR:', err);
+    res.status(500).json({ error: 'Profile lookup failed' });
+
+  }
+
 });
 
 /* ===============================
    SERVER
 ================================ */
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on ${PORT}`)
-);
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on ${PORT}`);
+});
