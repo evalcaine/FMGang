@@ -103,11 +103,8 @@ color:var(--ink-soft);
 
 main,
 .container{
-
 max-width:780px;
-
 margin:0 auto;
-
 padding:48px 24px 80px;
 
 }
@@ -564,29 +561,55 @@ margin-top:20px;
 }
 
 .btn-secondary{
-
 flex:1;
-
 border:1px solid var(--border);
-
 background:#f5f5f5;
-
 border-radius:10px;
-
 height:40px;
 
 }
 
 .btn-danger{
-
 flex:1;
-
 background:var(--danger);
-
 color:white;
-
 border-radius:10px;
-
 height:40px;
 
+}
+
+
+#loginForm button,
+#registerForm button{
+width:100%;
+margin-top:16px;
+font-size:16px;
+height:48px;
+}
+
+
+/*===========================
+       LOGIN CARD
+===========================*/
+
+.card{
+
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:24px;
+box-shadow:0 10px 30px rgba(0,0,0,.06);
+
+}
+
+.form-card{
+display:flex;
+flex-direction:column;
+gap:12px;
+
+}
+
+.title{
+margin-top:0;
+margin-bottom:12px;
 }
