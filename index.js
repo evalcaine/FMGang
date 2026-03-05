@@ -120,6 +120,7 @@ await pool.query(
 );
 
 res.json({ ok: true });
+}
 
 /* ===============================
    USER TOURS
