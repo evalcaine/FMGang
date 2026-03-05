@@ -141,10 +141,11 @@ margin-bottom:36px;
 }
 
 .hero-eyebrow{
-font-size:.9rem;
-color:var(--ink-faint);
-margin-bottom:6px;
+font-size:1rem;
+color:var(--ink-soft);
+margin-bottom:8px;
 font-style:italic;
+font-weight:600;
 }
 
 .hero h1{
