@@ -146,15 +146,17 @@ async function loadUserTours() {
       const started = start < today;
 
       const div = document.createElement('div');
-      div.className = 'tour-item';
+div.className = 'tour-item';
 
 const colorIndex = tour.route_code.charCodeAt(0) % 5;
-const colorClass = `tour-dot-${colorIndex+1}`;
+const colorClass = `tour-dot-${colorIndex + 1}`;
 
-      div.innerHTML = `
+div.innerHTML = `
 
 <div class="tour-color-dot ${colorClass}"></div>
+
 <div class="tour-info">
+
 <strong>${tour.route_code}</strong>
 
 <span>
