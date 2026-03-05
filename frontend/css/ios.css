@@ -44,7 +44,7 @@ box-sizing:border-box;
 
 body{
 margin:0;
-background:var(--bg);
+background:linear-gradient(180deg,#F7F9FC 0%,#EEF3F9 100%);
 color:var(--ink);
 font-family:'Nunito',system-ui,sans-serif;
 -webkit-font-smoothing:antialiased;
