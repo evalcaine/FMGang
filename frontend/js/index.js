@@ -11,15 +11,12 @@ let currentUserEmail = null;
 
 function formatDate(dateString) {
 
-  const date = new Date(dateString);
+  const d = new Date(dateString);
 
-  return date.toLocaleDateString(
-    'en-US',
-    {
-      month: 'short',
-      day: 'numeric'
-    }
-  );
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric'
+  });
 
 }
 
@@ -54,7 +51,6 @@ function setToday() {
   }
 
   loadMatches();
-
 }
 
 
@@ -77,7 +73,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const today = new Date();
 
-    todayDisplay.innerText = formatToday(today);
+    todayDisplay.innerText =
+  today.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
 
   }
 

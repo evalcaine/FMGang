@@ -72,47 +72,50 @@ header p {
 /* ======================================================
    NAVBAR
 ====================================================== */
-.navbar {
+.nav {
   position: sticky;
   top: 0;
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-light);
-  padding: 16px 20px;
-  z-index: 100;
-}
+  background: #f7f4ef;
+  border-bottom: 1px solid #e8e2d9;
 
-.nav-container {
-  max-width: 900px;
-  margin: 0 auto;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 24px;
 }
 
-.logo {
-  font-weight: 600;
-  color: var(--primary);
-  font-size: 17px;
-  letter-spacing: -0.2px;
+.nav-logo {
+  font-weight: 800;
+  font-size: 18px;
 }
 
-.nav-links a,
-.nav-links button {
-  margin-left: 14px;
-  background: none;
-  border: none;
+.nav-links {
+  display: flex;
+  gap: 18px;
+}
+
+.nav-links a {
   text-decoration: none;
-  font-size: 14px;
-  color: var(--text-secondary);
+  color: #6b6358;
+  font-weight: 600;
+}
+
+.nav-links a.active {
+  color: #2e2a24;
+}
+
+.nav-right {
+  margin-left: auto;
+}
+
+.logout-btn {
+  border: none;
+  background: transparent;
   cursor: pointer;
-  transition: var(--transition-fast);
+  font-weight: 600;
+  color: #6b6358;
 }
-
-.nav-links a:hover,
-.nav-links button:hover {
-  color: var(--primary);
-}
-
 
 /* ===============================
 MAIN LAYOUT
