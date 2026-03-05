@@ -332,8 +332,8 @@ others_on_date AS (
   JOIN routes r
     ON r.code = ut.route_code
   JOIN my_trip mt
-    ON r.day_offset = mt.trip_day
-   AND r.code = ut.route_code
+    ON r.code = mt.route_code
+   AND r.day_offset = mt.trip_day
   WHERE ut.email <> $1
   AND $2::date BETWEEN ut.start_date AND ut.end_date
 )
