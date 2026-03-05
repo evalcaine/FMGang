@@ -148,22 +148,17 @@ lastDateLoaded = date;
  const data = await response.json();
 
   
-  /* HERO CITY */
+ /* ===============================
+   HERO CITY
+================================ */
 
 const cityName = document.getElementById('city-name');
 
+if (Array.isArray(data) && data.length && cityName) {
+  cityName.innerText = data[0].city;
+}
+
 if (!Array.isArray(data) || !data.length) {
-  empty.innerText = 'No colleagues in this city for this date';
-  return;
-}
-
-const item = data[0];
-
-if (cityName) {
-  cityName.innerText = item.city;
-}
-
-if (!item.people || item.people.length === 0) {
   empty.innerText = 'No colleagues in this city for this date';
   return;
 }
