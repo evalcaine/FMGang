@@ -92,39 +92,34 @@ app.post('/api/trips', async (req, res) => {
 
     const endDate = endDateResult.rows[0].end_date;
 
-    // Check for overlapping trips
-    const conflict = await pool.query(
-      `
-      SELECT 1
-      FROM user_trips
-      WHERE email = $1
-      AND daterange(start_date, end_date, '[)') &&
-          daterange($2::date, $3::date, '[)')
-      LIMIT 1
-      `,
-      [email, startDate, endDate]
-    );
+   // Check for overlapping trips
+const conflict = await pool.query(
+  `
+  SELECT 1
+  FROM user_trips
+  WHERE email = $1
+  AND start_date < $3
+  AND end_date > $2
+  AND end_date <> $2
+  LIMIT 1
+  `,
+  [email, startDate, endDate]
+);
 
-    if (conflict.rowCount > 0) {
-      return res.status(400).json({
-        error: 'Trip overlaps an existing trip'
-      });
-    }
+if (conflict.rowCount > 0) {
+  return res.status(400).json({
+    error: 'Trip overlaps an existing trip'
+  });
+}
 
-    // Insert trip
-    await pool.query(
-      `INSERT INTO user_trips (email,name,route_code,start_date,end_date)
-       VALUES ($1,$2,UPPER($3),$4,$5)`,
-      [email, name, routeCode, startDate, endDate]
-    );
+// Insert trip
+await pool.query(
+  `INSERT INTO user_trips (email,name,route_code,start_date,end_date)
+   VALUES ($1,$2,UPPER($3),$4,$5)`,
+  [email, name, routeCode, startDate, endDate]
+);
 
-    res.json({ ok: true });
-
-  } catch (err) {
-    console.error('CREATE TRIP ERROR:', err);
-    res.status(500).json({ error: 'Failed to create trip' });
-  }
-});
+res.json({ ok: true });
 
 /* ===============================
    USER TOURS
