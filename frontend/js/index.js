@@ -145,20 +145,20 @@ lastDateLoaded = date;
     return;
   }
 
-  const data = await response.json();
+  const { city, matches } = await response.json();
 
   
   /* HERO CITY */
 
 const cityName = document.getElementById('city-name');
 
-if (Array.isArray(data) && data.length && cityName) {
+if (cityName && Array.isArray(data) && data.length) {
   cityName.innerText = data[0].city;
 }
 
 /* NO MATCHES */
 
-if (!Array.isArray(data) || data.length === 0) {
+if (!Array.isArray(data) || !data.length || !data[0].people || data[0].people.length === 0) {
   empty.innerText = 'No colleagues in this city for this date';
   return;
 }
