@@ -60,14 +60,19 @@ app.get('/api/routes', async (_, res) => {
    CREATE TOUR
 ================================ */
 app.post('/api/trips', async (req, res) => {
-if (!ensureDatabase(res)) return;
+  if (!ensureDatabase(res)) return;
+
   const { email, name, routeCode, startDate } = req.body;
+
   if (!email || !name || !routeCode || !startDate) {
     return res.status(400).json({ error: 'Missing fields' });
   }
 
+  // Get duration of the route
   const duration = await pool.query(
-    `SELECT MAX(day_offset) max_day FROM routes WHERE UPPER(code)=UPPER($1)`,
+    `SELECT MAX(day_offset) AS max_day
+     FROM routes
+     WHERE UPPER(code)=UPPER($1)`,
     [routeCode]
   );
 
@@ -75,6 +80,48 @@ if (!ensureDatabase(res)) return;
     return res.status(400).json({ error: 'Invalid route' });
   }
 
+  const maxDay = duration.rows[0].max_day;
+
+  // Calculate end date
+  const endDateResult = await pool.query(
+    `SELECT ($1::date + $2 * INTERVAL '1 day')::date AS end_date`,
+    [startDate, maxDay]
+  );
+
+  const endDate = endDateResult.rows[0].end_date;
+
+// 🔹 Insert trip including end_date
+  await pool.query(
+    `INSERT INTO user_trips (email,name,route_code,start_date,end_date)
+     VALUES ($1,$2,UPPER($3),$4,$5)`,
+    [email, name, routeCode, startDate, endDate]
+  );
+
+  res.json({ ok: true });
+});
+
+  // 🔴 CHECK FOR OVERLAPS (except end = start allowed)
+  const conflict = await pool.query(
+    `SELECT 1
+     FROM user_trips ut
+     JOIN routes r ON UPPER(r.code) = UPPER(ut.route_code)
+     WHERE ut.email = $1
+     AND (
+          $2::date < (ut.start_date + (SELECT MAX(day_offset) FROM routes WHERE UPPER(code)=UPPER(ut.route_code)) * INTERVAL '1 day')
+      AND $3::date > ut.start_date
+      AND (ut.start_date + (SELECT MAX(day_offset) FROM routes WHERE UPPER(code)=UPPER(ut.route_code)) * INTERVAL '1 day')::date != $2::date
+     )
+     LIMIT 1`,
+    [email, startDate, endDate]
+  );
+
+  if (conflict.rowCount > 0) {
+    return res.status(400).json({
+      error: 'Trip dates overlap. Only allowed if previous trip ends the same day the next begins.'
+    });
+  }
+
+  // Insert if valid
   await pool.query(
     `INSERT INTO user_trips (email,name,route_code,start_date)
      VALUES ($1,$2,UPPER($3),$4)`,
@@ -83,7 +130,6 @@ if (!ensureDatabase(res)) return;
 
   res.json({ ok: true });
 });
-
 /* ===============================
    USER TOURS
 ================================ */
