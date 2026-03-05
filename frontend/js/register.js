@@ -200,27 +200,43 @@ async function register() {
     phone
   });
 
+try {
   const res = await fetch('/api/trips', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: currentUser.email,
-      name,
-      routeCode,
-      startDate
-    })
-  });
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: currentUser.email,
+    name,
+    routeCode,
+    startDate
+  })
+});
 
-  btn.disabled = false;
+btn.disabled = false;
 
-  if (res.ok) {
-    msg.innerHTML = '<div class="success">Tour added!</div>';
-    document.getElementById('routeCode').value = '';
-    document.getElementById('startDate').value = '';
-    await loadUserTours();
-  } else {
-    msg.innerHTML = '<div class="error">Error adding tour - check the dates</div>';
-  }
+let data;
+try {
+  data = await res.json();
+} catch {
+  data = {};
+}
+
+if (res.ok) {
+
+  msg.innerHTML = '<div class="success">Tour added!</div>';
+
+}
+
+  document.getElementById('routeCode').value = '';
+  document.getElementById('startDate').value = '';
+
+  await loadUserTours();
+
+} else {
+
+  msg.innerHTML =
+    `<div class="error">${data.error || "Server error"}</div>`;
+
 }
 
 
