@@ -195,9 +195,7 @@ Delete
 /* ===============================
    REGISTER
 ================================ */
-/* ===============================
-   REGISTER
-================================ */
+
 async function register() {
 
   const msg = document.getElementById('message');
