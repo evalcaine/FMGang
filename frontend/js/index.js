@@ -152,11 +152,9 @@ lastDateLoaded = date;
 
 const cityName = document.getElementById('city-name');
 
-if (cityName && Array.isArray(data) && data.length) {
+if (Array.isArray(data) && data.length && cityName) {
   cityName.innerText = data[0].city;
 }
-
-/* NO MATCHES */
 
 if (!Array.isArray(data) || !data.length || !data[0].people || data[0].people.length === 0) {
   empty.innerText = 'No colleagues in this city for this date';
