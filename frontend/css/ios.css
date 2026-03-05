@@ -329,16 +329,13 @@ padding:0 20px;
 input[type="date"]{
 width:100%;
 min-width:0;
-appearance:none;
--webkit-appearance:none;
-padding-right:6px;
+padding-right:10px;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator{
 opacity:1;
 cursor:pointer;
 }
-
 
 /* ======================================================
    BUTTONS
