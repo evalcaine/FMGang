@@ -167,7 +167,7 @@ if (!Array.isArray(data) || !data.length) {
 
   data.forEach(item => {
 
-    if (!item.people || !item.people.length) return;
+    if (!Array.isArray(item.people) || item.people.length === 0) return;
 
     const card = document.createElement('div');
     card.className = 'colleague-card';
