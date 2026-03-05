@@ -156,7 +156,14 @@ if (Array.isArray(data) && data.length && cityName) {
   cityName.innerText = data[0].city;
 }
 
-if (!Array.isArray(data) || !data.length || !data[0].people || data[0].people.length === 0) {
+if (!Array.isArray(data) || !data.length) {
+  empty.innerText = 'No colleagues in this city for this date';
+  return;
+}
+
+const people = data[0].people || [];
+
+if (!people.length) {
   empty.innerText = 'No colleagues in this city for this date';
   return;
 }
@@ -165,7 +172,7 @@ if (!Array.isArray(data) || !data.length || !data[0].people || data[0].people.le
 
   data.forEach(item => {
 
-    if (!item.people?.length) return;
+    if (!item.people || !item.people.length) return;
 
     const card = document.createElement('div');
     card.className = 'colleague-card';
