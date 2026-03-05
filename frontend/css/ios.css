@@ -309,6 +309,13 @@ background:var(--surface);
 
 }
 
+.form-card button{
+width:auto;
+align-self:flex-start;
+margin-top:14px;
+padding:0 20px;
+}
+
 
 
 /* ======================================================
@@ -425,7 +432,7 @@ align-items:center;
 
 justify-content:space-between;
 
-gap:12px;
+gap:10px;
 
 background:var(--surface);
 
@@ -433,7 +440,7 @@ border:1px solid var(--border);
 
 border-radius:var(--radius);
 
-padding:14px;
+padding:10px 12px;
 
 }
 
@@ -456,6 +463,15 @@ display:flex;
 gap:6px;
 }
 
+.tour-actions button{
+
+height:34px;
+
+padding:0 10px;
+
+font-size:.85rem;
+
+}
 
 
 /* ======================================================
