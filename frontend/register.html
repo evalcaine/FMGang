@@ -42,7 +42,7 @@ find my gang
 <h1>My tours 🗺</h1>
 
 <p>
-All the cities where you're guiding a tour
+All the places you'll go
 </p>
 
 </div>
@@ -81,7 +81,7 @@ Loading routes…
 <!-- TOUR LIST -->
 <div class="tour-section">
 
-<h3>Your tours</h3>
+<h2>Your tours</h2>
 
 <div id="userTours" class="tours-list"></div>
 
@@ -94,19 +94,14 @@ Loading routes…
 
 <!-- EDIT MODAL -->
 <div id="editModal" class="overlay hidden" onclick="closeEdit(event)">
-
 <div class="modal">
-
 <button class="close-btn" onclick="closeEdit()">✕</button>
 
 <h2>Edit Tour</h2>
 
 <input id="editRouteCode" disabled>
-
 <input id="editStartDate" type="date">
-
 <button class="search-btn" onclick="saveEdit()">Save</button>
-
 <button class="today-btn" onclick="closeEdit()">Cancel</button>
 
 <div id="editMsg"></div>
@@ -118,15 +113,10 @@ Loading routes…
 
 <!-- CONFIRM DELETE -->
 <div id="confirmModal" class="confirm-modal hidden">
-
 <div class="confirm-modal-card">
-
 <h3 id="confirmTitle">Confirm</h3>
-
 <p id="confirmMessage"></p>
-
 <div class="confirm-modal-actions">
-
 <button id="confirmCancel" class="btn-secondary">
 Cancel
 </button>
