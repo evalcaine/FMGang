@@ -121,6 +121,7 @@ async function loadRoutes() {
   }
 }
 
+
 /* ===============================
    LOAD USER TOURS
 ================================ */
@@ -151,11 +152,24 @@ async function loadUserTours() {
       div.innerHTML = `
         <strong>${tour.route_code}</strong><br>
         ${formatDate(tour.start_date)} → ${formatDate(tour.end_date)}
-        <br>
-        <button onclick="openEdit(${tour.id}, '${tour.route_code}', '${tour.start_date}')"
-          ${started ? 'disabled' : ''}>Edit</button>
-        <button onclick="deleteTour(${tour.id})"
-          ${started ? 'disabled' : ''}>Delete</button>
+
+        <div class="tour-actions">
+
+          <label class="match-toggle">
+            <input type="checkbox"
+              ${tour.visible_in_matches ? 'checked' : ''}
+              onchange="toggleMatching(${tour.id}, this.checked)"
+              ${started ? 'disabled' : ''}>
+            <span>Visible in matches</span>
+          </label>
+
+          <button onclick="openEdit(${tour.id}, '${tour.route_code}', '${tour.start_date}')"
+            ${started ? 'disabled' : ''}>Edit</button>
+
+          <button onclick="deleteTour(${tour.id})"
+            ${started ? 'disabled' : ''}>Delete</button>
+
+        </div>
       `;
 
       container.appendChild(div);
@@ -222,6 +236,22 @@ async function register() {
     msg.innerHTML = '<div class="error">Error adding tour</div>';
   }
 }
+
+
+/*=================================
+TOGGLE VISIBILITY
+==================================*/
+async function toggleMatching(id, visible) {
+  await fetch(`/api/user-tours/${id}/visibility`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: currentUser.email,
+      visible
+    })
+  });
+}
+
 
 
 /* ===============================

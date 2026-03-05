@@ -107,6 +107,34 @@ app.get('/api/user-tours', async (req, res) => {
   res.json(r.rows);
 });
 
+
+/*==================================
+VISIBILITY
+==================================*/
+app.put('/api/user-tours/:id/visibility', async (req, res) => {
+
+  const { id } = req.params;
+  const { email, visible } = req.body;
+
+  try {
+
+    await pool.query(
+      `UPDATE user_trips
+       SET visible_in_matches = $1
+       WHERE id = $2 AND email = $3`,
+      [visible, id, email]
+    );
+
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Visibility update failed' });
+  }
+
+});
+
+
 /*===================================
 EDIT SAVE
 ==============================*/
@@ -199,6 +227,32 @@ app.get('/api/matches/grouped', async (req, res) => {
   }
 
   try {
+
+    /* ===============================
+       CHECK MY VISIBILITY FIRST
+    =============================== */
+
+    const myVisibility = await pool.query(
+      `
+      SELECT ut.visible_in_matches
+      FROM user_trips ut
+      JOIN routes r
+        ON UPPER(r.code) = UPPER(ut.route_code)
+      WHERE ut.email = $1
+        AND r.day_offset = ($2::date - ut.start_date)
+      LIMIT 1
+      `,
+      [email, date]
+    );
+
+    if (!myVisibility.rows.length || !myVisibility.rows[0].visible_in_matches) {
+      return res.json({ disabled: true });
+    }
+
+    /* ===============================
+       MATCH QUERY
+    =============================== */
+
     const result = await pool.query(
       `
       WITH my_city AS (
@@ -208,6 +262,7 @@ app.get('/api/matches/grouped', async (req, res) => {
           ON UPPER(r.code) = UPPER(ut.route_code)
         WHERE ut.email = $1
           AND r.day_offset = ($2::date - ut.start_date)
+          AND ut.visible_in_matches = true
       ),
       others_on_date AS (
         SELECT
@@ -219,6 +274,7 @@ app.get('/api/matches/grouped', async (req, res) => {
           ON UPPER(r.code) = UPPER(ut.route_code)
         WHERE ut.email <> $1
           AND r.day_offset = ($2::date - ut.start_date)
+          AND ut.visible_in_matches = true
       )
       SELECT
         o.city,

@@ -95,6 +95,12 @@ async function loadMatches() {
 
   const data = await response.json();
 
+  if (data.disabled) {
+  empty.innerText =
+    'Turn on "Visible in matches" in My Tours to see who is around.';
+  return;
+}
+
   if (!Array.isArray(data) || data.length === 0) {
     empty.innerText = 'No matches found';
     return;
