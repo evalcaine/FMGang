@@ -55,45 +55,53 @@
 </section>
 
 
-<!-- DATE BAR -->
-<div class="date-bar">
+<!-- SEARCH PANEL -->
+<div class="section-card">
 
-  <span class="date-label">Showing</span>
+  <!-- DATE BAR -->
+  <div class="date-bar">
 
-  <input
-type="date"
-id="date"
-class="date-input">
+    <span class="date-label">Showing</span>
 
-  <div class="date-divider"></div>
+    <input
+      type="date"
+      id="date"
+      class="date-input">
 
-  <button
-  onclick="setToday()"
-  class="today-btn">
-  Today
-</button>
+    <div class="date-divider"></div>
 
-</div>
+    <button
+      onclick="setToday()"
+      class="today-btn">
+      Today
+    </button>
 
-
-<!-- RESULTS HEADER -->
-<div class="results-header">
-
-  <span class="results-title" id="resultsTitle">
-    Colleagues nearby
-  </span>
-
-  <span class="results-count" id="resultsDate">
-  </span>
+  </div>
 
 </div>
 
 
-<!-- RESULTS GRID -->
-<div id="results" class="cards-grid"></div>
+<!-- RESULTS PANEL -->
+<div class="section-card">
 
-<div id="empty" class="empty-state"></div>
+  <!-- RESULTS HEADER -->
+  <div class="results-header">
 
+    <span class="results-title" id="resultsTitle">
+      Colleagues nearby
+    </span>
+
+    <span class="results-count" id="resultsDate">
+    </span>
+
+  </div>
+
+  <!-- RESULTS GRID -->
+  <div id="results" class="cards-grid"></div>
+
+  <div id="empty" class="empty-state"></div>
+
+</div>
 
 </main>
 
