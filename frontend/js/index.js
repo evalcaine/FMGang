@@ -50,7 +50,8 @@ function setToday() {
     dateInput.value = today;
   }
 
-  
+  loadMatches();
+
 }
 
 
@@ -59,27 +60,24 @@ function setToday() {
    INIT
 ================================ */
 
+
 document.addEventListener('DOMContentLoaded', async () => {
 
   const results = document.getElementById('results');
-
   if (!results) return;
 
-  /* TODAY DISPLAY */
-
+  const dateInput = document.getElementById('date');
   const todayDisplay = document.getElementById('today-display');
 
+  /* DISPLAY TODAY */
+
   if (todayDisplay) {
-
     const today = new Date();
-
-    todayDisplay.innerText =
-  today.toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric'
-  });
-
+    todayDisplay.innerText = today.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    });
   }
 
   /* AUTH CHECK */
@@ -88,15 +86,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     await supabaseClient.auth.getSession();
 
   if (!session) {
-
     window.location.href = 'login.html';
     return;
-
   }
 
   currentUserEmail = session.user.email;
 
-  /* SET TODAY */
+  /* DATE CHANGE LISTENER */
+
+  if (dateInput) {
+    dateInput.addEventListener('change', loadMatches);
+  }
+
+  /* INITIAL LOAD */
 
   setToday();
 
