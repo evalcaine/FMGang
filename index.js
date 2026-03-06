@@ -348,7 +348,51 @@ app.get('/api/matches/grouped', async (req, res) => {
     });
   }
 
+  const today = new Date().toISOString().split('T')[0];
+
+  /* ===============================
+     NO PAST MATCHES
+  ================================= */
+
+  if (date < today) {
+    return res.json([]);
+  }
+
+  /* ===============================
+     10 DAY VISIBILITY WINDOW
+  ================================= */
+
   try {
+
+    const startCheck = await pool.query(
+      `
+      SELECT start_date
+      FROM user_trips
+      WHERE email = $1
+      AND visible = TRUE
+      AND $2::date BETWEEN start_date AND end_date
+      LIMIT 1
+      `,
+      [email, date]
+    );
+
+    if (!startCheck.rowCount) {
+      return res.json([]);
+    }
+
+    const startDate = startCheck.rows[0].start_date;
+
+    const diff = Math.floor(
+      (new Date(startDate) - new Date(today)) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diff > 10) {
+      return res.json([]);
+    }
+
+    /* ===============================
+       MATCH QUERY
+    ================================= */
 
     const result = await pool.query(
       `
@@ -358,10 +402,13 @@ app.get('/api/matches/grouped', async (req, res) => {
     ($2::date - ut.start_date) AS trip_day
   FROM user_trips ut
   WHERE ut.email = $1
-    AND ut.visible = TRUE    
+  AND ut.visible = TRUE
+  AND $2::date >= CURRENT_DATE
+  AND ut.start_date <= CURRENT_DATE + INTERVAL '10 days'
   AND $2::date BETWEEN ut.start_date AND ut.end_date
   LIMIT 1
 ),
+
 my_city AS (
   SELECT r.city
   FROM routes r
@@ -369,6 +416,7 @@ my_city AS (
     ON r.code = mt.route_code
    AND r.day_offset = mt.trip_day
 ),
+
 others_on_date AS (
   SELECT ut.name, r.city
   FROM user_trips ut
@@ -379,6 +427,8 @@ others_on_date AS (
    AND r.day_offset = mt.trip_day
   WHERE ut.email <> $1
   AND ut.visible = TRUE
+  AND $2::date >= CURRENT_DATE
+  AND ut.start_date <= CURRENT_DATE + INTERVAL '10 days'
   AND $2::date BETWEEN ut.start_date AND ut.end_date
 )
 
@@ -408,7 +458,6 @@ GROUP BY m.city;
   }
 
 });
-
 
 /* ===============================
    PROFILE
