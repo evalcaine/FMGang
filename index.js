@@ -343,59 +343,73 @@ app.get('/api/matches/grouped', async (req, res) => {
   const { email, date } = req.query;
 
   if (!email || !date) {
-    return res.status(400).json({
-      error: 'Missing required query params'
-    });
+    return res.status(400).json({ error: 'Missing required query params' });
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+
+  /* ---------- Past date ---------- */
+
+  if (date < today) {
+    return res.json({ reason: "past" });
   }
 
   try {
 
+    /* ---------- Get user trip ---------- */
+
+    const trip = await pool.query(
+      `
+      SELECT route_code, start_date, visible
+      FROM user_trips
+      WHERE email = $1
+      AND $2::date BETWEEN start_date AND end_date
+      LIMIT 1
+      `,
+      [email, date]
+    );
+
+    if (!trip.rowCount) {
+      return res.json({ reason: "hidden" });
+    }
+
+    const { route_code, start_date, visible } = trip.rows[0];
+
+    if (!visible) {
+      return res.json({ reason: "hidden" });
+    }
+
+    /* ---------- 10-day rule ---------- */
+
+    const diff = Math.floor(
+      (new Date(start_date) - new Date(today)) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diff > 10) {
+      return res.json({ reason: "too_early" });
+    }
+
+    /* ---------- Match query ---------- */
+
     const result = await pool.query(
       `
-      WITH my_trip AS (
-        SELECT
-          ut.route_code,
-          ut.start_date,
-          ($2::date - ut.start_date) AS trip_day
-        FROM user_trips ut
-        WHERE ut.email = $1
-        LIMIT 1
-      ),
-
-      visibility_check AS (
-        SELECT
-          CASE
-            WHEN mt.start_date IS NULL THEN 'hidden'
-            WHEN mt.start_date > CURRENT_DATE + INTERVAL '10 days' THEN 'too_early'
-            WHEN $2::date < CURRENT_DATE THEN 'past'
-            ELSE 'ok'
-          END AS reason
-        FROM my_trip mt
-      ),
-
-      my_city AS (
+      WITH my_city AS (
         SELECT r.city
         FROM routes r
-        JOIN my_trip mt
-          ON r.code = mt.route_code
-         AND r.day_offset = mt.trip_day
+        WHERE r.code = $1
+        AND r.day_offset = ($2::date - $3::date)
       ),
-
-      others_on_date AS (
+      others AS (
         SELECT ut.name, r.city
         FROM user_trips ut
         JOIN routes r
           ON r.code = ut.route_code
-        JOIN my_trip mt
-          ON r.code = mt.route_code
-         AND r.day_offset = mt.trip_day
-        WHERE ut.email <> $1
+        WHERE ut.email <> $4
         AND ut.visible = TRUE
         AND $2::date BETWEEN ut.start_date AND ut.end_date
       )
 
       SELECT
-        vc.reason,
         m.city,
         $2::date AS date,
         COALESCE(
@@ -403,15 +417,15 @@ app.get('/api/matches/grouped', async (req, res) => {
           FILTER (WHERE o.name IS NOT NULL),
           '[]'
         ) AS people
-      FROM visibility_check vc
-      LEFT JOIN my_city m ON TRUE
-      LEFT JOIN others_on_date o ON m.city = o.city
-      GROUP BY vc.reason, m.city;
+      FROM my_city m
+      LEFT JOIN others o
+        ON m.city = o.city
+      GROUP BY m.city
       `,
-      [email, date]
+      [route_code, date, start_date, email]
     );
 
-    res.json(result.rows);
+    res.json({ reason: "ok", matches: result.rows });
 
   } catch (err) {
 

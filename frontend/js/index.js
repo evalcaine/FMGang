@@ -147,26 +147,24 @@ lastDateLoaded = date;
 
  const data = await response.json();
 
-if (!data.length) return;
+if (data.reason !== "ok") {
 
-const reason = data[0].reason;
-
-if (reason !== "ok") {
-
-  if (reason === "hidden") {
+  if (data.reason === "hidden") {
     empty.innerText = "Your tour is hidden. Enable visibility in My Tours.";
   }
 
-  if (reason === "past") {
+  if (data.reason === "past") {
     empty.innerText = "Matches are only available for today and future dates.";
   }
 
-  if (reason === "too_early") {
+  if (data.reason === "too_early") {
     empty.innerText = "Matches will appear 10 days before your tour starts.";
   }
 
   return;
 }
+
+const matches = data.matches;
   
  /* ===============================
    HERO CITY
