@@ -609,6 +609,18 @@ color:var(--ink-soft);
 
 .tour-actions{
 display:flex;
+flex-direction:column;
+align-items:flex-end;
+gap:6px;
+}
+
+.tour-toggle{
+display:flex;
+justify-content:flex-end;
+}
+
+.tour-buttons{
+display:flex;
 gap:6px;
 }
 
@@ -842,6 +854,7 @@ align-items:center;
 gap:10px;
 font-size:14px;
 margin-top:8px;
+flex-shrink:0;
 }
 
 .visibility-switch .state{

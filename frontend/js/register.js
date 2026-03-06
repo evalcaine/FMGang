@@ -162,9 +162,13 @@ ${formatDate(tour.start_date)} → ${formatDate(tour.end_date)}
 </span>
 
 </div>
+
+
 <div class="tour-actions">
 
+<div class="tour-toggle">
 <label class="visibility-switch">
+
 <span class="state">Hidden</span>
 
 <div class="switch">
@@ -181,6 +185,9 @@ ${started ? "disabled" : ""}
 <span class="state">Visible</span>
 
 </label>
+</div>
+
+<div class="tour-buttons">
 
 <button
 onclick="openEdit(${tour.id}, '${tour.route_code}', '${tour.start_date}')"
@@ -193,6 +200,8 @@ onclick="deleteTour(${tour.id})"
 ${started ? 'disabled' : ''}>
 Delete
 </button>
+
+</div>
 
 </div>
 
@@ -356,6 +365,37 @@ async function saveEdit() {
   }
 }
 
+/*======================================
+           CHANGE LISTENER
+=====================================*/
+document.addEventListener('change', async (e) => {
+
+  if (!e.target.classList.contains('tour-visibility')) return;
+
+  const tripId = e.target.dataset.tripId;
+  const visible = e.target.checked;
+
+  try {
+
+    const res = await fetch('/api/tour/visibility', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tripId, visible })
+    });
+
+    if (!res.ok) throw new Error();
+
+  } catch (err) {
+
+    console.error(err);
+
+    e.target.checked = !visible;
+
+    alert("Could not update visibility");
+
+  }
+
+});
 
 /* ===============================
    LOGOUT
