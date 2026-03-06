@@ -372,13 +372,13 @@ my_city AS (
 others_on_date AS (
   SELECT ut.name, r.city
   FROM user_trips ut
-   WHERE ut.visible = TRUE     
   JOIN routes r
     ON r.code = ut.route_code
   JOIN my_trip mt
     ON r.code = mt.route_code
    AND r.day_offset = mt.trip_day
   WHERE ut.email <> $1
+  AND ut.visible = TRUE
   AND $2::date BETWEEN ut.start_date AND ut.end_date
 )
 
