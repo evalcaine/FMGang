@@ -180,7 +180,7 @@ app.get('/api/user-tours', async (req, res) => {
 
     const result = await pool.query(
       `
-      SELECT id, route_code, start_date, end_date
+      SELECT id, route_code, start_date, end_date, visible
       FROM user_trips
       WHERE email = $1
       ORDER BY start_date
@@ -291,6 +291,48 @@ app.delete('/api/user-tours/:id', async (req, res) => {
 });
 
 /* ===============================
+   TOUR VISIBILITY
+================================ */
+
+app.post('/api/tour/visibility', async (req, res) => {
+
+  if (!ensureDatabase(res)) return;
+
+  const { tripId, visible } = req.body;
+
+  if (tripId === undefined || visible === undefined) {
+    return res.status(400).json({ error: 'Missing fields' });
+  }
+
+  try {
+
+    const result = await pool.query(
+      `
+      UPDATE user_trips
+      SET visible = $1
+      WHERE id = $2
+      `,
+      [visible, tripId]
+    );
+
+    if (!result.rowCount) {
+      return res.status(404).json({ error: 'Tour not found' });
+    }
+
+    res.json({ success: true });
+
+  } catch (err) {
+
+    console.error('VISIBILITY ERROR:', err);
+    res.status(500).json({ error: 'Failed to update visibility' });
+
+  }
+
+});
+
+
+
+/* ===============================
    MATCHES
 ================================ */
 
@@ -316,6 +358,7 @@ app.get('/api/matches/grouped', async (req, res) => {
     ($2::date - ut.start_date) AS trip_day
   FROM user_trips ut
   WHERE ut.email = $1
+    AND ut.visible = TRUE    
   AND $2::date BETWEEN ut.start_date AND ut.end_date
   LIMIT 1
 ),
@@ -329,6 +372,7 @@ my_city AS (
 others_on_date AS (
   SELECT ut.name, r.city
   FROM user_trips ut
+   WHERE ut.visible = TRUE     
   JOIN routes r
     ON r.code = ut.route_code
   JOIN my_trip mt

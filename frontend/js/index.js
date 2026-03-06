@@ -146,7 +146,10 @@ lastDateLoaded = date;
   }
 
  const data = await response.json();
-
+if (!data.length) {
+  empty.innerText = "Your tour is hidden. Enable visibility in My Tours to see other travelers.";
+  return;
+}
   
  /* ===============================
    HERO CITY

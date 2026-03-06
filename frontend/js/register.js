@@ -151,21 +151,36 @@ div.className = 'tour-item';
 const colorIndex = tour.route_code.charCodeAt(0) % 5;
 const colorClass = `tour-dot-${colorIndex + 1}`;
 
+/*-----Layout*------------*/
 div.innerHTML = `
 
 <div class="tour-color-dot ${colorClass}"></div>
-
 <div class="tour-info">
-
 <strong>${tour.route_code}</strong>
-
 <span>
 ${formatDate(tour.start_date)} → ${formatDate(tour.end_date)}
 </span>
 
 </div>
-
 <div class="tour-actions">
+
+<label class="visibility-switch">
+<span class="state">Hidden</span>
+
+<div class="switch">
+<input
+type="checkbox"
+class="tour-visibility"
+data-trip-id="${tour.id}"
+${tour.visible ? "checked" : ""}
+${started ? "disabled" : ""}
+>
+<span class="track"></span>
+</div>
+
+<span class="state">Visible</span>
+
+</label>
 
 <button
 onclick="openEdit(${tour.id}, '${tour.route_code}', '${tour.start_date}')"
@@ -182,6 +197,7 @@ Delete
 </div>
 
 `;
+
 
       container.appendChild(div);
     });

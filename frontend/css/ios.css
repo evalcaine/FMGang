@@ -830,3 +830,71 @@ background:#F1F6FF;
 .auth-switch .link.strong:active{
 transform:scale(.98);
 }
+
+
+/* ===============================
+--- TOUR VISIBILITY TOGGLE --- 
+==================================*/
+
+.visibility-switch{
+display:flex;
+align-items:center;
+gap:10px;
+font-size:14px;
+margin-top:8px;
+}
+
+.visibility-switch .state{
+color:var(--ink-soft);
+font-weight:500;
+user-select:none;
+}
+
+/* switch container */
+
+.switch{
+position:relative;
+width:46px;
+height:24px;
+flex-shrink:0;
+}
+
+.switch input{
+display:none;
+}
+
+/* track */
+
+.track{
+position:absolute;
+width:100%;
+height:100%;
+background:#d1d5db;
+border-radius:20px;
+transition:background .25s ease;
+}
+
+/* knob */
+
+.track:before{
+content:"";
+position:absolute;
+height:18px;
+width:18px;
+left:3px;
+top:3px;
+background:#fff;
+border-radius:50%;
+box-shadow:0 1px 3px rgba(0,0,0,.25);
+transition:transform .25s ease;
+}
+
+/* ON state */
+
+.switch input:checked + .track{
+background:var(--accent);
+}
+
+.switch input:checked + .track:before{
+transform:translateX(22px);
+}
