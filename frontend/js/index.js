@@ -172,18 +172,19 @@ const matches = data.matches;
 
 const cityName = document.getElementById('city-name');
 
-if (Array.isArray(data) && data.length && cityName) {
-  cityName.innerText = data[0].city;
+if (Array.isArray(matches) && matches.length && cityName) {
+  cityName.innerText = matches[0].city;
 }
 
-if (!Array.isArray(data) || !data.length) {
+if (!Array.isArray(matches) || !matches.length) {
   empty.innerText = 'No colleagues in this city for this date';
   return;
 }
 
   /* CARDS */
+results.innerHTML = "";
 
-  data.forEach(item => {
+  matches.forEach(item => {
 
     if (!Array.isArray(item.people) || item.people.length === 0) return;
 
