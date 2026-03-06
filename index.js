@@ -393,34 +393,21 @@ app.get('/api/matches/grouped', async (req, res) => {
 
     const result = await pool.query(
       `
-      WITH my_trip AS (
-  SELECT
-    ut.route_code,
-    ut.start_date,
-    ($2::date - ut.start_date) AS trip_day
-  FROM user_trips ut
-  WHERE ut.email = $4
-  LIMIT 1
-),
-
-my_city AS (
+      WITH my_city AS (
   SELECT r.city
   FROM routes r
-  JOIN my_trip mt
-    ON r.code = mt.route_code
-   AND r.day_offset = mt.trip_day
+  WHERE r.code = $1
+  AND r.day_offset = ($2::date - $3::date)
 ),
 
 others AS (
   SELECT ut.name, r.city
   FROM user_trips ut
-  JOIN my_trip mt
-    ON ut.route_code = mt.route_code
   JOIN routes r
     ON r.code = ut.route_code
-   AND r.day_offset = mt.trip_day
   WHERE ut.email <> $4
   AND ut.visible = TRUE
+  AND r.day_offset = ($2::date - ut.start_date)
   AND $2::date BETWEEN ut.start_date AND ut.end_date
 )
 
