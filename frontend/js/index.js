@@ -1,5 +1,5 @@
 /* ===============================
-   GLOBAL
+   GLOBAL register
 ================================ */
 
 let currentUserEmail = null;
